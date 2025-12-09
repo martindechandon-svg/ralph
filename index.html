@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚡ Ralph - Aide gratuite à la gestion des comptes</title>
-
-    <link rel="icon" type="image/jpg" href="./images/ralphlogo.jpg">
     
+    <link rel="icon" type="image/jpg" href="./images/ralphlogo.jpg"> 
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
@@ -35,24 +35,30 @@
             --table-row-sep: #3B3B5B;
         }
 
-        /* Thème Clair (Light Mode) -- NOUVEAU STYLE */
+        /* Thème Clair (Light Mode) -- NOUVEAU STYLE AMÉLIORÉ */
         body.light-mode {
-            --bg-color: #F8F9FA; 
-            --card-color: #FFFFFF; 
-            --text-color: #212529; 
-            --light-text-color: #6C757D; 
-            --border-color: #DEE2E6; 
-            --input-bg: #F0F3F6; 
+            /* Fonds et Structure */
+            --bg-color: #F0F3F6;         /* Fond de page légèrement gris/bleu */
+            --card-color: #FFFFFF;       /* Fond des cartes et du container principal */
+            --input-bg: #E9ECEF;         /* Fond des formulaires / inputs */
+            --border-color: #DEE2E6;     /* Lignes de séparation/bordures douces */
             
-            --neon-accent: #007BFF; 
+            /* Couleurs de Texte */
+            --text-color: #212529;        /* Texte très sombre (noir) */
+            --light-text-color: #6C757D;  /* Texte secondaire / labels */
+            
+            /* Couleurs d'Accentuation et Statut */
+            --neon-accent: #007AFF;      /* Bleu primaire (plus moderne) */
             --neon-success: #28A745;
             --neon-danger: #DC3545;
             --neon-warning: #FFC107;
             
-            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-            --shadow-deep: 0 8px 25px rgba(0, 0, 0, 0.15);
+            /* Ombres (donnent du relief) */
+            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombre douce pour les tableaux/cartes */
+            --shadow-deep: 0 8px 20px rgba(0, 0, 0, 0.15); /* Ombre plus marquée pour le container principal */
             
-            --table-header-bg: #007BFF; 
+            /* Tableau */
+            --table-header-bg: #007AFF;  /* En-tête de tableau bleu */
             --table-row-sep: #E9ECEF; 
         }
         
@@ -103,12 +109,18 @@
             font-weight: 600;
         }
         h1 { 
-            font-size: 2.8em; 
+            /* TAILLE DIMINUÉE POUR PLUS D'ESPACE VERTICAL */
+            font-size: 2.5em; /* Ancien: 2.8em */
             text-shadow: var(--neon-accent) 0 0 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+        /* AJUSTEMENT POUR REHAUSSER LE TITRE ET LE LOGO */
+        h1 > div:first-child { 
+            padding-top: 10px; 
+        }
+
         body.light-mode h1 { 
             text-shadow: none; 
             color: var(--text-color); 
@@ -120,8 +132,8 @@
         
         /* Style pour l'image du logo dans le H1 */
         .app-logo {
-            width: 80px; 
-            height: 80px; 
+            width: 70px; /* Ancien: 80px */
+            height: 70px; /* Ancien: 80px */
             margin-right: 10px;
             border-radius: 50%;
             box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
@@ -130,9 +142,15 @@
         body.light-mode .app-logo {
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); 
         }
+        /* Ajustement Light Mode pour le texte à côté du logo */
         body.light-mode h1 .app-logo + span {
             color: var(--neon-accent);
             text-shadow: none;
+        }
+        /* AJUSTEMENT DE LA TAGLINE */
+        h1 > div:first-child span {
+            margin-top: 2px !important; /* Petit espace positif */
+            line-height: 1.2;
         }
 
 
@@ -208,6 +226,8 @@
         }
         body.light-mode .compact-switch-btn:hover {
             box-shadow: none;
+            background-color: var(--neon-accent);
+            color: white; 
         }
 
         /* --- FORMULAIRES DE TABLEAU DE BORD (Mise en page) --- */
@@ -231,6 +251,12 @@
         #recurrence-form input, #recurrence-form select {
             width: 100%;
             background-color: var(--card-color); 
+        }
+        body.light-mode #transaction-form input, 
+        body.light-mode #transaction-form select,
+        body.light-mode #recurrence-form input, 
+        body.light-mode #recurrence-form select {
+            background-color: var(--input-bg); /* Utilise le fond clair spécifique aux inputs */
         }
         
         /* Gestion des Onglets (Mois) */
@@ -289,8 +315,16 @@
         
         .revenue-row { background-color: rgba(0, 255, 153, 0.1); color: var(--neon-success); }
         .expense-row { background-color: rgba(255, 51, 102, 0.1); color: var(--neon-danger); }
-        body.light-mode .revenue-row { background-color: rgba(40, 167, 69, 0.05); color: var(--neon-success); }
-        body.light-mode .expense-row { background-color: rgba(220, 53, 69, 0.05); color: var(--neon-danger); }
+        
+        /* Ajustements couleurs des lignes en Light Mode */
+        body.light-mode .revenue-row { 
+            background-color: #E6F7EF; /* Vert très pâle */
+            color: var(--neon-success); 
+        }
+        body.light-mode .expense-row { 
+            background-color: #FEEEEE; /* Rouge très pâle */
+            color: var(--neon-danger); 
+        }
         
         #transaction-list td:nth-child(6), 
         #recurrence-list td:nth-child(2) { 
@@ -327,6 +361,8 @@
         }
         body.light-mode .chart-container {
             background-color: var(--card-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Ombre plus subtile en light */
+            border: 1px solid var(--border-color);
         }
         
         #solde {
@@ -361,6 +397,9 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
+        body.light-mode .budget-card {
+            background-color: var(--input-bg);
+        }
         .budget-card h4 {
             display: flex;
             justify-content: space-between;
@@ -377,6 +416,9 @@
             overflow: hidden;
             margin-bottom: 5px;
         }
+        body.light-mode .budget-bar-container {
+             background-color: #DEE2E6;
+        }
         .budget-bar {
             height: 100%;
             transition: width 0.5s ease;
@@ -390,7 +432,7 @@
             margin: 0;
         }
         
-        /* --- STYLE DU SWITCHER DE THÈME (MIS À JOUR) --- */
+        /* --- STYLE DU SWITCHER DE THÈME --- */
         #theme-switcher { 
             position: absolute; 
             top: 40px; 
@@ -398,23 +440,23 @@
             z-index: 1000; 
             display: flex;
             align-items: center;
-            gap: 10px; /* Espace entre les labels et le switch */
+            gap: 10px; 
             font-weight: 600;
         }
         
         .theme-label {
             transition: color 0.3s;
             font-size: 0.9em;
-            color: var(--light-text-color); /* Couleur par défaut (éteint) */
+            color: var(--light-text-color); 
         }
 
         /* Label actif en Dark Mode */
         body:not(.light-mode) #dark-label {
-            color: var(--neon-accent); /* S'allume en Dark Mode */
+            color: var(--neon-accent); 
         }
         /* Label actif en Light Mode */
         body.light-mode #light-label {
-            color: var(--neon-accent); /* S'allume en Light Mode */
+            color: var(--neon-accent); 
         }
 
         .theme-switch { 
@@ -487,7 +529,7 @@
         .export-btn:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
         
         
-        /* --- NOUVEAU: MODALE DE NOTIFICATION --- */
+        /* --- MODALE DE NOTIFICATION --- */
         #notification-modal {
             display: none; 
             position: fixed;
@@ -517,6 +559,12 @@
         .modal-success i { color: var(--neon-success); }
         .modal-error i { color: var(--neon-danger); }
         .modal-info i { color: var(--neon-accent); }
+        
+        /* Ajustements modale en Light Mode */
+        body.light-mode #notification-modal {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        
         #notification-modal p {
             font-size: 1.1em;
             margin: 0;
@@ -593,9 +641,9 @@
                 <div style="display:flex; flex-direction:column; align-items:flex-start; line-height: 1.1;">
                     <div style="display:flex; align-items:center; gap:10px;">
                         <img src="./images/ralphlogo.jpg" alt="Logo Chihuahua Ralph" class="app-logo">
-                        Ralph
+                        <span style="line-height: 1.1;">Ralph</span>
                     </div>
-                    <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px; margin-top: -5px;">t'aide gratuitement à faire tes comptes</span>
+                    <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px;">t'aide gratuitement à faire tes comptes</span>
                 </div>
                 </h1>
             
@@ -713,7 +761,7 @@
                     <div style="display:flex; align-items:center; gap:10px;">
                         <i class="fas fa-sync-alt"></i> Récurrences & Abonnements
                     </div>
-                    <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px; margin-top: -5px;">Liste Maître des transactions automatiques</span>
+                    <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px;">Liste Maître des transactions automatiques</span>
                 </div>
                 <button onclick="showScreen('dashboard-screen')" class="app-btn save-btn"><i class="fas fa-arrow-circle-left"></i> Retour au Tableau de Bord</button>
             </h1>
@@ -813,13 +861,13 @@
         const rSelectCompte = document.getElementById('r-compte');
         const rSelectType = document.getElementById('r-type');
         
-        // NOUVEAU: Éléments de la Modale
+        // Éléments de la Modale
         const notificationModal = document.getElementById('notification-modal');
         const modalMessage = document.getElementById('modal-message');
         const modalIcon = document.getElementById('modal-icon');
         
         
-        // --- NOUVEAU: GESTION DE LA MODALE ---
+        // --- GESTION DE LA MODALE ---
         function showModal(message, type = 'info', duration = 3000) {
             modalMessage.textContent = message;
             
@@ -1540,5 +1588,7 @@
 
         init();
     </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@vercel/speed-insights/dist/script.js" defer></script>
 </body>
 </html>
