@@ -98,10 +98,10 @@
 
 
         /* --- TITRES & SÉPARATEURS --- */
-        h1, h2 {
+        h1, h2, h3 {
             color: var(--neon-accent);
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+            padding-bottom: 10px; /* Réduit pour les h3 */
+            margin-bottom: 20px; /* Réduit pour les h3 */
             display: flex;
             align-items: center;
             gap: 12px;
@@ -113,7 +113,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color); /* Nouvelle ligne de séparation pour le H1 */
+            border-bottom: 1px solid var(--border-color);
         }
         h1 > div:first-child { 
             padding-top: 10px; 
@@ -126,7 +126,14 @@
         h2 { 
             font-size: 1.8em; 
             justify-content: flex-start;
-            border-bottom: 1px solid var(--border-color); /* Ligne pour les H2 */
+            border-bottom: 1px solid var(--border-color); 
+            margin-bottom: 30px;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: var(--text-color);
+            border-bottom: none;
+            margin-top: 0;
         }
         
         .app-logo {
@@ -265,6 +272,7 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: flex-start;
+            margin-bottom: 20px; /* Espace avant le bouton de sauvegarde */
         }
         #budget-form > div {
             flex: 1 1 200px;
@@ -413,7 +421,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 5px;
         }
         .budget-card {
             background-color: var(--card-color);
@@ -432,6 +440,8 @@
             color: var(--text-color);
             font-size: 1em;
             font-weight: 500;
+            padding-bottom: 0;
+            border-bottom: none;
         }
         .budget-bar-container {
             height: 12px;
@@ -720,7 +730,9 @@
             Solde Actuel:
             <span id="solde-value-persistent" class="balance-amount positif">0.00 €</span>
         </div>
-        <div style="clear:both;"></div> <nav id="main-nav">
+        <div style="clear:both;"></div> 
+        
+        <nav id="main-nav">
             <button class="nav-btn active" data-screen="dashboard-screen"><i class="fas fa-tachometer-alt"></i> Tableau de Bord</button>
             <button class="nav-btn" data-screen="analysis-screen"><i class="fas fa-chart-line"></i> Analyse</button>
             <button class="nav-btn" data-screen="recurrence-page"><i class="fas fa-sync-alt"></i> Récurrences</button>
@@ -752,24 +764,6 @@
                     <button onclick="supprimerMoisSelectionne()" class="app-btn delete-btn" style="flex: 1 1 100px;"><i class="fas fa-trash-alt"></i> Supprimer l'onglet</button>
 
                 </div>
-            </div>
-
-            <hr class="separator">
-
-            <h2><i class="fas fa-chart-pie"></i> Suivi Budgétaire Mensuel</h2>
-            
-            <div class="chart-container" style="margin-bottom: 25px;">
-                <h3>Définir vos Budgets mensuels</h3>
-                <p style="color: var(--light-text-color); margin-bottom: 15px;">Entrez la limite de dépenses souhaitée par catégorie pour ce mois.</p>
-                <form id="budget-form">
-                    </form>
-                <button onclick="sauvegarderTransactions()" class="app-btn save-btn" style="margin-top: 20px;"><i class="fas fa-sync"></i> Mettre à jour les Budgets</button>
-            </div>
-            
-            <div class="chart-container">
-                <h3>Consommation Actuelle</h3>
-                <div id="budget-section">
-                    </div>
             </div>
 
             <hr class="separator">
@@ -817,16 +811,36 @@
             <h2><i class="fas fa-money-check-alt"></i> Solde Actuel (<span id="analysis-tab-name" style="color:var(--neon-accent);">Janvier 2026</span>)</h2>
             <div id="solde-analysis" class="positif" style="margin-bottom: 40px;">0.00 €</div>
             
+            <h2><i class="fas fa-chart-pie"></i> Suivi & Répartition des Dépenses</h2>
+
+            <div class="analysis-grid">
+                 <div class="chart-container" style="flex: 1 1 450px;">
+                    <h3><i class="fas fa-edit"></i> Définir vos Budgets mensuels</h3>
+                    <p style="color: var(--light-text-color); margin-bottom: 15px;">Entrez la limite de dépenses souhaitée par catégorie pour ce mois.</p>
+                    <form id="budget-form">
+                    </form>
+                    <button onclick="sauvegarderTransactions()" class="app-btn save-btn" style="margin-top: 5px;"><i class="fas fa-sync"></i> Mettre à jour les Budgets</button>
+                </div>
+                
+                <div class="chart-container" style="flex: 1 1 450px;">
+                    <h3><i class="fas fa-list-alt"></i> Consommation Actuelle</h3>
+                    <div id="budget-section">
+                    </div>
+                </div>
+            </div>
+
+            <hr class="separator">
+            
             <div class="analysis-grid">
                 <div class="chart-container" style="flex: 1 1 450px;">
-                    <h2><i class="fas fa-chart-pie"></i> Répartition des Dépenses par Catégorie</h2>
+                    <h3><i class="fas fa-chart-pie"></i> Répartition des Dépenses par Catégorie</h3>
                     <div id="pie-chart-container" style="height: 350px;">
                         <canvas id="expense-pie-chart"></canvas>
                     </div>
                 </div>
                 
                 <div class="chart-container" style="flex: 1 1 450px;">
-                    <h2><i class="fas fa-chart-bar"></i> Solde Historique (futur)</h2>
+                    <h3><i class="fas fa-chart-bar"></i> Solde Historique (futur)</h3>
                     <p style="color: var(--light-text-color);">Fonctionnalité en cours de développement pour afficher l'évolution du solde entre les mois.</p>
                     <div style="height: 350px; background-color: var(--input-bg); border-radius: 8px;"></div>
                 </div>
@@ -1025,6 +1039,8 @@
             if (screenId === 'analysis-screen') {
                 mettreAJourSoldeEtTotaux();
                 mettreAJourGraphique();
+                mettreAJourSuiviBudget(); // S'assurer que le suivi budgétaire est mis à jour
+                genererChampsBudget(); // S'assurer que les champs de budget sont chargés
             }
             if (screenId === 'transfer-page') {
                  // Mise à jour du nom de l'onglet dans la page de transfert
@@ -1261,14 +1277,14 @@
             });
             
             mettreAJourSoldeEtTotaux();
-            mettreAJourSuiviBudget();
-            // mettreAJourGraphique() n'est plus appelé ici (uniquement dans showScreen('analysis-screen'))
+            mettreAJourSuiviBudget(); 
         }
 
         function ajouterNouvelleTransaction(date, description, montant, type, categorie, compte) {
             const nouvelleTransaction = { date, description, montant, type, categorie, compte, recurrent: false }; 
             currentMonthData.transactions.push(nouvelleTransaction);
             rechargerTableau();
+            sauvegarderTransactions(false); // Sauvegarde après ajout
             showModal(`Transaction ajoutée : ${description}.`, 'success');
         }
         
@@ -1336,6 +1352,9 @@
         }
         
         function genererChampsBudget() {
+            // S'assurer que les budgets sont chargés avant de générer les champs
+            currentMonthData.budgets = currentMonthData.budgets || {};
+            
             budgetForm.innerHTML = '';
             
             CATEGORIES.depense.forEach(cat => {
@@ -1367,6 +1386,12 @@
                     acc[t.categorie] = (acc[t.categorie] || 0) + t.montant;
                     return acc;
                 }, {});
+            
+            // S'assurer qu'il y a des budgets définis avant de continuer
+            if (Object.keys(currentMonthData.budgets).length === 0) {
+                 budgetSection.innerHTML = `<p style="color: var(--light-text-color);">Aucun budget défini pour le mois actuel. Définissez-les ci-dessus.</p>`;
+                 return;
+            }
 
             Object.entries(currentMonthData.budgets).forEach(([cat, budgetLimite]) => {
                 const depenseActuelle = depensesParCategorie[cat] || 0;
@@ -1419,8 +1444,19 @@
             
             const canvas = document.getElementById('expense-pie-chart');
             if (!canvas) return; 
+            
+            // Si aucune donnée, on ne crée pas le graphique.
+            if (data.every(d => d === 0) || data.length === 0) {
+                 const pieChartContainer = document.getElementById('pie-chart-container');
+                 pieChartContainer.innerHTML = '<p style="color: var(--light-text-color); text-align:center; padding-top: 150px;">Aucune donnée de dépense pour ce mois.</p>';
+                 return;
+            } else {
+                 // Remettre le canvas s'il a été remplacé par le message
+                 document.getElementById('pie-chart-container').innerHTML = '<canvas id="expense-pie-chart"></canvas>';
+            }
 
-            const ctx = canvas.getContext('2d');
+
+            const ctx = document.getElementById('expense-pie-chart').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -1469,6 +1505,7 @@
             
             chargerListeMois(currentMonthName);
             mettreAJourSuiviBudget();
+            mettreAJourGraphique(); // Mettre à jour les graphiques après la sauvegarde
             
             if (showMessage) {
                 showModal(`Onglet "${currentMonthName}" sauvegardé avec succès !`, 'success');
@@ -1489,18 +1526,21 @@
                 currentMonthData = JSON.parse(allData[monthToLoad]);
                 currentMonthData.transactions = currentMonthData.transactions || [];
                 currentMonthData.soldeOuverture = parseFloat(currentMonthData.soldeOuverture) || 0;
+                // S'assurer que l'objet budgets existe
+                currentMonthData.budgets = currentMonthData.budgets || {}; 
                 transactions = currentMonthData.transactions;
                 
                 currentMonthInput.value = monthToLoad;
                 soldeOuvertureInput.value = currentMonthData.soldeOuverture.toFixed(2);
                 
-                genererChampsBudget();
+                genererChampsBudget(); // Charge les budgets dans le formulaire
                 rechargerTableau();
                 
                 // Mettre à jour l'analyse si on charge un mois
                 if (document.getElementById('analysis-screen').classList.contains('active')) {
                     mettreAJourGraphique();
                     mettreAJourSoldeEtTotaux();
+                    mettreAJourSuiviBudget();
                 }
                 
             } else {
@@ -1512,7 +1552,7 @@
             currentMonthData = {
                 transactions: [],
                 soldeOuverture: soldePrecedent,
-                budgets: {}
+                budgets: {} // Les budgets sont réinitialisés pour le nouveau mois
             };
             transactions = currentMonthData.transactions;
             
@@ -1534,7 +1574,7 @@
                     nextMonth.setMonth(nextMonth.getMonth() + 1);
                 }
             } else {
-                nextMonth.setMonth(nextMonth.getMonth() + 1);
+                nextMonth.setMonth(nextMonth.getMonth()); // Commence sur le mois actuel si aucune donnée
             }
             
             const monthName = nextMonth.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
@@ -1560,7 +1600,7 @@
 
                 preparerNouvelOnglet(soldeCloture, lastMonthName);
             } else {
-                preparerNouvelOnglet(0);
+                preparerNouvelOnglet(0, null); // Pas de mois précédent, commence à 0 sur le mois actuel
             }
         }
         
