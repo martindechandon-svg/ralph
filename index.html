@@ -35,30 +35,30 @@
             --table-row-sep: #3B3B5B;
         }
 
-        /* Thème Clair (Light Mode) -- NOUVEAU STYLE AMÉLIORÉ */
+        /* Thème Clair (Light Mode) */
         body.light-mode {
             /* Fonds et Structure */
-            --bg-color: #F0F3F6;         /* Fond de page légèrement gris/bleu */
-            --card-color: #FFFFFF;       /* Fond des cartes et du container principal */
-            --input-bg: #E9ECEF;         /* Fond des formulaires / inputs */
-            --border-color: #DEE2E6;     /* Lignes de séparation/bordures douces */
+            --bg-color: #F0F3F6;         
+            --card-color: #FFFFFF;       
+            --input-bg: #E9ECEF;         
+            --border-color: #DEE2E6;     
             
             /* Couleurs de Texte */
-            --text-color: #212529;        /* Texte très sombre (noir) */
-            --light-text-color: #6C757D;  /* Texte secondaire / labels */
+            --text-color: #212529;        
+            --light-text-color: #6C757D;  
             
             /* Couleurs d'Accentuation et Statut */
-            --neon-accent: #007AFF;      /* Bleu primaire (plus moderne) */
+            --neon-accent: #007AFF;      
             --neon-success: #28A745;
             --neon-danger: #DC3545;
             --neon-warning: #FFC107;
             
-            /* Ombres (donnent du relief) */
-            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombre douce pour les tableaux/cartes */
-            --shadow-deep: 0 8px 20px rgba(0, 0, 0, 0.15); /* Ombre plus marquée pour le container principal */
+            /* Ombres */
+            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+            --shadow-deep: 0 8px 20px rgba(0, 0, 0, 0.15); 
             
             /* Tableau */
-            --table-header-bg: #007AFF;  /* En-tête de tableau bleu */
+            --table-header-bg: #007AFF;  
             --table-row-sep: #E9ECEF; 
         }
         
@@ -100,7 +100,6 @@
         /* --- TITRES & SÉPARATEURS --- */
         h1, h2 {
             color: var(--neon-accent);
-            border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
             margin-bottom: 30px;
             display: flex;
@@ -109,14 +108,13 @@
             font-weight: 600;
         }
         h1 { 
-            /* TAILLE DIMINUÉE POUR PLUS D'ESPACE VERTICAL */
-            font-size: 2.5em; /* Ancien: 2.8em */
+            font-size: 2.5em; 
             text-shadow: var(--neon-accent) 0 0 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border-color); /* Nouvelle ligne de séparation pour le H1 */
         }
-        /* AJUSTEMENT POUR REHAUSSER LE TITRE ET LE LOGO */
         h1 > div:first-child { 
             padding-top: 10px; 
         }
@@ -128,12 +126,12 @@
         h2 { 
             font-size: 1.8em; 
             justify-content: flex-start;
+            border-bottom: 1px solid var(--border-color); /* Ligne pour les H2 */
         }
         
-        /* Style pour l'image du logo dans le H1 */
         .app-logo {
-            width: 70px; /* Ancien: 80px */
-            height: 70px; /* Ancien: 80px */
+            width: 70px; 
+            height: 70px; 
             margin-right: 10px;
             border-radius: 50%;
             box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
@@ -142,17 +140,6 @@
         body.light-mode .app-logo {
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); 
         }
-        /* Ajustement Light Mode pour le texte à côté du logo */
-        body.light-mode h1 .app-logo + span {
-            color: var(--neon-accent);
-            text-shadow: none;
-        }
-        /* AJUSTEMENT DE LA TAGLINE */
-        h1 > div:first-child span {
-            margin-top: 2px !important; /* Petit espace positif */
-            line-height: 1.2;
-        }
-
 
         .separator {
             border: 0;
@@ -216,7 +203,6 @@
             padding: 5px 10px;
             font-size: 0.8em;
             text-transform: none;
-            /* margin-left: auto; */
             border: 1px solid var(--neon-accent);
         }
         .compact-switch-btn:hover {
@@ -256,7 +242,7 @@
         body.light-mode #transaction-form select,
         body.light-mode #recurrence-form input, 
         body.light-mode #recurrence-form select {
-            background-color: var(--input-bg); /* Utilise le fond clair spécifique aux inputs */
+            background-color: var(--input-bg); 
         }
         
         /* Gestion des Onglets (Mois) */
@@ -318,11 +304,11 @@
         
         /* Ajustements couleurs des lignes en Light Mode */
         body.light-mode .revenue-row { 
-            background-color: #E6F7EF; /* Vert très pâle */
+            background-color: #E6F7EF; 
             color: var(--neon-success); 
         }
         body.light-mode .expense-row { 
-            background-color: #FEEEEE; /* Rouge très pâle */
+            background-color: #FEEEEE; 
             color: var(--neon-danger); 
         }
         
@@ -349,11 +335,12 @@
         /* --- ANALYSES & SOLDE --- */
         .analysis-grid {
             display: flex;
+            flex-wrap: wrap;
             gap: 30px;
             margin-bottom: 40px;
         }
         .chart-container {
-            flex: 1;
+            flex: 1 1 450px; /* Assure que les conteneurs prennent de la place */
             padding: 20px;
             border-radius: var(--border-radius);
             background-color: var(--input-bg);
@@ -361,29 +348,31 @@
         }
         body.light-mode .chart-container {
             background-color: var(--card-color);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Ombre plus subtile en light */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
             border: 1px solid var(--border-color);
         }
         
-        #solde {
+        /* Nouveau style pour le Solde sur la page Analyse */
+        #solde-analysis {
             display: inline-block;
             padding: 15px 30px;
             border-radius: var(--border-radius);
             font-size: 2.5em;
             font-weight: 700;
             text-align: center;
+            transition: all 0.3s;
         }
-        #solde.positif {
+        #solde-analysis.positif {
             background-color: var(--neon-success);
             color: var(--card-color);
             box-shadow: 0 0 20px var(--neon-success);
         }
-        #solde.negatif {
+        #solde-analysis.negatif {
             background-color: var(--neon-danger);
             color: var(--card-color);
             box-shadow: 0 0 20px var(--neon-danger);
         }
-        
+
         /* Style des cartes de suivi budgétaire */
         #budget-section {
             display: flex;
@@ -432,6 +421,46 @@
             margin: 0;
         }
         
+        /* --- NOUVEAUX STYLES POUR LA NAVIGATION PRINCIPALE --- */
+        #main-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav-btn {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: transparent;
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: none;
+            text-transform: none; 
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-btn:hover {
+            border-color: var(--neon-accent);
+            color: var(--neon-accent);
+        }
+        .nav-btn.active {
+            background-color: var(--neon-accent);
+            color: var(--card-color);
+            border-color: var(--neon-accent);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+        }
+        body.light-mode .nav-btn.active {
+            color: white; 
+            box-shadow: 0 4px 8px rgba(0, 122, 255, 0.2);
+        }
+
         /* --- STYLE DU SWITCHER DE THÈME --- */
         #theme-switcher { 
             position: absolute; 
@@ -450,11 +479,9 @@
             color: var(--light-text-color); 
         }
 
-        /* Label actif en Dark Mode */
         body:not(.light-mode) #dark-label {
             color: var(--neon-accent); 
         }
-        /* Label actif en Light Mode */
         body.light-mode #light-label {
             color: var(--neon-accent); 
         }
@@ -470,7 +497,7 @@
             transition: background 0.3s; 
         }
         .theme-switch::before {
-            content: "\f186"; /* Lune */
+            content: "\f186"; 
             font-family: "Font Awesome 6 Free"; 
             font-weight: 900; 
             position: absolute; 
@@ -489,14 +516,14 @@
             box-shadow: 0 0 5px var(--neon-accent);
         }
         body.light-mode .theme-switch::before {
-            content: "\f185"; /* Soleil */
+            content: "\f185"; 
             transform: translateX(25px); 
             background-color: var(--neon-warning); 
             color: white; 
             box-shadow: 0 0 5px var(--neon-warning);
         }
         
-        /* --- NOUVEAUX STYLES POUR IMPORT/EXPORT --- */
+        /* --- NOUVEAUX STYLES POUR IMPORT/EXPORT (Transfer Page) --- */
         .transfer-section {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -560,7 +587,6 @@
         .modal-error i { color: var(--neon-danger); }
         .modal-info i { color: var(--neon-accent); }
         
-        /* Ajustements modale en Light Mode */
         body.light-mode #notification-modal {
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
@@ -570,7 +596,6 @@
             margin: 0;
         }
 
-        /* Style pour la mention de droit d'auteur */
         #copyright-footer {
             text-align: center; 
             color: var(--light-text-color); 
@@ -596,6 +621,10 @@
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
             .compact-switch-btn { margin-left: 10px; } 
+            .nav-btn {
+                flex-grow: 1;
+                justify-content: center;
+            }
 
             #transaction-form, #recurrence-form {
                 grid-template-columns: 1fr;
@@ -635,26 +664,28 @@
         <p id="modal-message">Ceci est un message de notification.</p>
     </div>
 
-    <div id="dashboard-screen" class="screen active">
-        <div class="container">
-            <h1>
-                <div style="display:flex; flex-direction:column; align-items:flex-start; line-height: 1.1;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="./images/ralphlogo.jpg" alt="Logo Chihuahua Ralph" class="app-logo">
-                        <span style="line-height: 1.1;">Ralph</span>
-                    </div>
-                    <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px;">t'aide gratuitement à faire tes comptes</span>
+    <div class="container">
+        <h1>
+            <div style="display:flex; flex-direction:column; align-items:flex-start; line-height: 1.1;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="./images/ralphlogo.jpg" alt="Logo Chihuahua Ralph" class="app-logo">
+                    <span style="line-height: 1.1;">Ralph</span>
                 </div>
-                </h1>
+                <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px;">t'aide gratuitement à faire tes comptes</span>
+            </div>
+        </h1>
+        
+        <nav id="main-nav">
+            <button class="nav-btn active" data-screen="dashboard-screen"><i class="fas fa-tachometer-alt"></i> Tableau de Bord</button>
+            <button class="nav-btn" data-screen="analysis-screen"><i class="fas fa-chart-line"></i> Analyse</button>
+            <button class="nav-btn" data-screen="recurrence-page"><i class="fas fa-sync-alt"></i> Récurrences</button>
+            <button class="nav-btn" data-screen="transfer-page"><i class="fas fa-exchange-alt"></i> Transfert & Sauvegarde</button>
+        </nav>
+
+        
+        <div id="dashboard-screen" class="screen active">
             
-            <hr class="separator">
-            
-            <h2>
-                <i class="fas fa-folder-open"></i> Gestion des Onglets / Mois 
-                <button onclick="showScreen('recurrence-page')" class="app-btn compact-switch-btn" title="Gérer les transactions automatiques">
-                    <i class="fas fa-sync-alt"></i> Récurrences
-                </button>
-            </h2>
+            <h2><i class="fas fa-folder-open"></i> Gestion des Onglets / Mois</h2>
             <div class="gestion-onglets">
                 <div id="solde-ouverture-container">
                     <label for="solde-ouverture">Solde de Départ (€):</label>
@@ -680,7 +711,7 @@
 
             <hr class="separator">
 
-            <h2><i class="fas fa-chart-pie"></i> Analyse des Dépenses & Budget</h2>
+            <h2><i class="fas fa-chart-pie"></i> Suivi Budgétaire Mensuel</h2>
             
             <div class="chart-container" style="margin-bottom: 25px;">
                 <h3>Définir vos Budgets mensuels</h3>
@@ -689,34 +720,15 @@
                     </form>
                 <button onclick="sauvegarderTransactions()" class="app-btn save-btn" style="margin-top: 20px;"><i class="fas fa-sync"></i> Mettre à jour les Budgets</button>
             </div>
-
-            <div class="analysis-grid">
-                <div class="chart-container">
-                    <h3>Suivi Budgétaire</h3>
-                    <div id="budget-section">
-                        </div>
-                </div>
-                <div class="chart-container">
-                    <h3>Répartition des Dépenses par Catégorie</h3>
-                    <div id="pie-chart-container" style="height: 300px;">
-                        <canvas id="expense-pie-chart"></canvas>
+            
+            <div class="chart-container">
+                <h3>Consommation Actuelle</h3>
+                <div id="budget-section">
                     </div>
-                </div>
             </div>
-            
-            <hr class="separator">
-            
-            <h2><i class="fas fa-exchange-alt"></i> Sauvegarde et Transfert (CSV)</h2>
-            <div class="transfer-section">
-                <button onclick="exportToCSV()" class="app-btn export-btn"><i class="fas fa-file-export"></i> Exporter les Transactions (CSV)</button>
-                
-                <label for="csv-file">Importer Transactions :</label>
-                <input type="file" id="csv-file" accept=".csv" onchange="importFromCSV(event)">
-                <span style="font-size: 0.9em; color: var(--neon-warning);">⚠️ L'import remplace les transactions actuelles de l'onglet.</span>
-            </div>
-            
-            <hr class="separator">
 
+            <hr class="separator">
+            
             <h2><i class="fas fa-plus-circle"></i> Ajouter une Transaction (Ponctuelle)</h2>
             <form id="transaction-form">
                 <input type="date" id="date" required value="2026-01-01">
@@ -751,30 +763,40 @@
                 <tbody id="transaction-list">
                     </tbody>
             </table>
-
-            <hr class="separator">
-
-            <h2><i class="fas fa-money-check-alt"></i> Solde Actuel</h2>
-            <div id="solde" class="positif">0.00 €</div>
             
         </div>
-    </div>
-    
-    <div id="recurrence-page" class="screen">
-        <div class="container">
-            <h1>
-                <div style="display:flex; flex-direction:column; align-items:flex-start; line-height: 1.1;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <i class="fas fa-sync-alt"></i> Récurrences & Abonnements
-                    </div>
-                    <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px;">Liste Maître des transactions automatiques</span>
-                </div>
-                <button onclick="showScreen('dashboard-screen')" class="app-btn save-btn"><i class="fas fa-arrow-circle-left"></i> Retour au Tableau de Bord</button>
-            </h1>
-            
-            <p style="color: var(--light-text-color); margin-bottom: 20px;">Définissez ici vos transactions automatiques ou abonnements (loyer, salaires, etc.). Utilisez le bouton ci-dessous pour les importer dans votre mois budgétaire.</p>
 
-            <h2><i class="fas fa-plus"></i> Définir une Nouvelle Récurrence</h2>
+        
+        <div id="analysis-screen" class="screen">
+            
+            <h2><i class="fas fa-money-check-alt"></i> Solde Actuel (<span id="analysis-tab-name" style="color:var(--neon-accent);">Janvier 2026</span>)</h2>
+            <div id="solde-analysis" class="positif" style="margin-bottom: 40px;">0.00 €</div>
+            
+            <div class="analysis-grid">
+                <div class="chart-container" style="flex: 1 1 450px;">
+                    <h2><i class="fas fa-chart-pie"></i> Répartition des Dépenses par Catégorie</h2>
+                    <div id="pie-chart-container" style="height: 350px;">
+                        <canvas id="expense-pie-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container" style="flex: 1 1 450px;">
+                    <h2><i class="fas fa-chart-bar"></i> Solde Historique (futur)</h2>
+                    <p style="color: var(--light-text-color);">Fonctionnalité en cours de développement pour afficher l'évolution du solde entre les mois.</p>
+                    <div style="height: 350px; background-color: var(--input-bg); border-radius: 8px;"></div>
+                </div>
+            </div>
+            
+        </div>
+
+
+        <div id="recurrence-page" class="screen">
+            
+            <h2><i class="fas fa-sync-alt"></i> Récurrences & Abonnements (Liste Maître)</h2>
+            
+            <p style="color: var(--light-text-color); margin-bottom: 20px;">Définissez ici vos transactions automatiques ou abonnements (loyer, salaires, etc.).</p>
+
+            <h3><i class="fas fa-plus"></i> Définir une Nouvelle Récurrence</h3>
             <form id="recurrence-form">
                 <input type="text" id="r-description" placeholder="Nom de l'abonnement" required>
                 <input type="number" id="r-montant" placeholder="Montant" required min="0" step="0.01">
@@ -794,6 +816,8 @@
                 <input type="date" id="r-prochaine-echeance" required value="2026-01-01">
                 <button type="submit" class="app-btn add-btn"><i class="fas fa-plus"></i> Ajouter Récurrence</button>
             </form>
+
+            <hr class="separator">
 
             <h2><i class="fas fa-list"></i> Liste des Récurrences Actives</h2>
             <table>
@@ -816,6 +840,25 @@
             <button onclick="chargerRecurrencesDansMoisActuel()" class="app-btn save-btn" style="margin-top: 30px;"><i class="fas fa-cloud-download-alt"></i> Charger les Récurrences dans l'Onglet Actuel</button>
             
         </div>
+
+
+        <div id="transfer-page" class="screen">
+            
+            <h2><i class="fas fa-file-export"></i> Exporter les données (CSV)</h2>
+            <p style="color: var(--light-text-color);">Exporte les transactions de l'onglet actuel ( <span id="export-tab-name" style="color:var(--neon-accent);">Janvier 2026</span> ) dans un fichier CSV.</p>
+            <button onclick="exportToCSV()" class="app-btn export-btn"><i class="fas fa-download"></i> Exporter les Transactions (CSV)</button>
+
+            <hr class="separator">
+
+            <h2><i class="fas fa-file-import"></i> Importer des données (CSV)</h2>
+            <div class="transfer-section">
+                <label for="csv-file">Sélectionner un fichier CSV de transactions :</label>
+                <input type="file" id="csv-file" accept=".csv" onchange="importFromCSV(event)">
+                <span style="font-size: 0.9em; color: var(--neon-warning);">⚠️ L'importation remplace **toutes** les transactions actuelles de l'onglet actif.</span>
+            </div>
+            
+        </div>
+        
     </div>
 
     <p id="copyright-footer">
@@ -846,9 +889,14 @@
 
         // Références aux éléments HTML
         const body = document.body;
+        const navButtons = document.querySelectorAll('.nav-btn'); // NOUVEAU
         const form = document.getElementById('transaction-form');
         const transactionList = document.getElementById('transaction-list');
-        const soldeDiv = document.getElementById('solde');
+        
+        const soldeAnalysisDiv = document.getElementById('solde-analysis'); // NOUVEAU
+        const analysisTabName = document.getElementById('analysis-tab-name'); // NOUVEAU
+        const exportTabName = document.getElementById('export-tab-name'); // NOUVEAU
+        
         const currentMonthInput = document.getElementById('current-month');
         const selectMonth = document.getElementById('select-month');
         const currentTabName = document.getElementById('current-tab-name');
@@ -902,7 +950,7 @@
             }, duration);
         }
 
-        // --- GESTION DES ÉCRANS (SIMPLIFIÉE) ---
+        // --- GESTION DES ÉCRANS (MISE À JOUR) ---
         
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => {
@@ -910,10 +958,40 @@
             });
             document.getElementById(screenId).classList.add('active');
             
+            // Gérer l'état actif des boutons de navigation
+            navButtons.forEach(btn => {
+                if (btn.getAttribute('data-screen') === screenId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Actions spécifiques à l'écran
             if (screenId === 'recurrence-page') {
                 chargerRecurrences();
             }
+            if (screenId === 'analysis-screen') {
+                mettreAJourSoldeEtTotaux();
+                mettreAJourGraphique();
+            }
+            if (screenId === 'transfer-page') {
+                 // Mise à jour du nom de l'onglet dans la page de transfert
+                exportTabName.textContent = currentMonthInput.value;
+            }
+            // Si on retourne au Dashboard, on recharge les totaux
+            if (screenId === 'dashboard-screen') {
+                rechargerTableau();
+            }
         }
+        
+        // Ajouter l'écouteur d'événements pour les boutons de navigation
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                showScreen(this.getAttribute('data-screen'));
+            });
+        });
+
 
         // --- GESTION DU THÈME ---
         
@@ -1078,20 +1156,26 @@
         
         function mettreAJourSoldeEtTotaux() {
             const { solde } = calculerSolde();
-            soldeDiv.textContent = solde.toFixed(2) + ' €';
+            
+            // Mise à jour du solde sur la page Analyse
+            soldeAnalysisDiv.textContent = solde.toFixed(2) + ' €';
 
-            soldeDiv.classList.remove('positif', 'negatif');
+            soldeAnalysisDiv.classList.remove('positif', 'negatif');
             if (solde >= 0) {
-                soldeDiv.classList.add('positif');
+                soldeAnalysisDiv.classList.add('positif');
             } else {
-                soldeDiv.classList.add('negatif');
+                soldeAnalysisDiv.classList.add('negatif');
             }
+            
+            // Mise à jour des noms d'onglets
+            currentTabName.textContent = currentMonthInput.value;
+            analysisTabName.textContent = currentMonthInput.value;
+            exportTabName.textContent = currentMonthInput.value;
         }
         
         function rechargerTableau() {
             transactionList.innerHTML = ''; 
-            currentTabName.textContent = currentMonthInput.value;
-
+            
             currentMonthData.transactions.forEach((t, index) => {
                 const row = transactionList.insertRow();
             
@@ -1117,8 +1201,8 @@
             });
             
             mettreAJourSoldeEtTotaux();
-            mettreAJourGraphique();
             mettreAJourSuiviBudget();
+            // mettreAJourGraphique() n'est plus appelé ici (uniquement dans showScreen('analysis-screen'))
         }
 
         function ajouterNouvelleTransaction(date, description, montant, type, categorie, compte) {
@@ -1146,7 +1230,6 @@
             form.reset();
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
             
-            // Re-populer la catégorie après le reset (car le type change les options)
             chargerSelecteurs();
         });
 
@@ -1180,11 +1263,13 @@
             };
 
             // Transactions ponctuelles
+            typeSelect.removeEventListener('change', () => updateCategories(selectCategorie, typeSelect));
             typeSelect.addEventListener('change', () => updateCategories(selectCategorie, typeSelect));
             updateCategories(selectCategorie, typeSelect); 
             populateSelect(selectCompte, COMPTES);
             
             // Récurrences
+            rSelectType.removeEventListener('change', () => updateCategories(rSelectCategorie, rSelectType));
             rSelectType.addEventListener('change', () => updateCategories(rSelectCategorie, rSelectType));
             updateCategories(rSelectCategorie, rSelectType); 
             populateSelect(rSelectCompte, COMPTES);
@@ -1266,13 +1351,16 @@
                 '#FF3366', '#00FFFF', '#FFDD44', '#00FF99', '#9933FF', '#FF66AA', '#33FFFF', '#6666FF'
             ];
             
-            const textColor = body.classList.contains('light-mode') ? 'var(--text-color)' : 'var(--text-color)';
+            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF'; // Utilisation des couleurs définies en dur pour Chart.js
 
             if (chartInstance) {
                 chartInstance.destroy();
             }
+            
+            const canvas = document.getElementById('expense-pie-chart');
+            if (!canvas) return; // Sécurité si l'élément n'est pas là
 
-            const ctx = document.getElementById('expense-pie-chart').getContext('2d');
+            const ctx = canvas.getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -1348,6 +1436,12 @@
                 
                 genererChampsBudget();
                 rechargerTableau();
+                
+                // Mettre à jour l'analyse si on charge un mois
+                if (document.getElementById('analysis-screen').classList.contains('active')) {
+                    mettreAJourGraphique();
+                    mettreAJourSoldeEtTotaux();
+                }
                 
             } else {
                 showModal(`Erreur: Les données pour "${monthToLoad}" sont introuvables.`, 'error');
@@ -1444,12 +1538,13 @@
             showModal(`Onglet "${monthToDelete}" supprimé.`, 'success');
             
             chargerListeMois();
-            gererNouveauMois();
+            // Assure qu'on est sur le Dashboard après la suppression
+            showScreen('dashboard-screen');
+            // La fonction chargerListeMois appellera gererNouveauMois si aucun mois n'est sélectionné
         }
 
-        // Fonction utilitaire pour trier les noms de mois (nécessaire pour la navigation)
+        // Fonction utilitaire pour trier les noms de mois
         function comparerMois(a, b) {
-            // Fonction simple pour parser "Mois Année" en objet Date pour la comparaison
             const parseMonth = (monthName) => {
                 const [monthStr, yearStr] = monthName.split(' ');
                 const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -1463,12 +1558,11 @@
             const dateA = parseMonth(a);
             const dateB = parseMonth(b);
             
-            return dateA - dateB; // Trie du plus ancien au plus récent
+            return dateA - dateB; 
         }
         
         function chargerListeMois(selectedMonth = null) {
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            // Utiliser la fonction de tri pour avoir la bonne chronologie (et inverser pour l'affichage)
             const monthNames = Object.keys(allData).sort(comparerMois).reverse(); 
             
             selectMonth.innerHTML = ''; 
@@ -1502,12 +1596,10 @@
         
         function naviguerMois(direction) {
             const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            // La liste des mois triée chronologiquement est la clé pour naviguer
             const monthNames = Object.keys(allData).sort(comparerMois); 
             
             const currentIndex = monthNames.indexOf(selectMonth.value);
             
-            // Si le mois actuel n'est pas trouvé ou si c'est "Nouveau Mois", on ne navigue pas.
             if (currentIndex === -1 || selectMonth.value === 'new') {
                 showModal("Veuillez sélectionner un mois valide pour naviguer.", 'error');
                 return;
@@ -1515,7 +1607,6 @@
             
             let newIndex = currentIndex + direction;
             
-            // Assurez-vous que l'index reste dans les limites de la liste des mois
             if (newIndex >= 0 && newIndex < monthNames.length) {
                 selectMonth.value = monthNames[newIndex];
                 chargerTransactions();
@@ -1588,9 +1679,10 @@
 
                 const newTransactions = [];
                 for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].match(/(?:"[^"]*"|[^;])+/g); 
+                    // Expression régulière pour gérer les séparateurs et les champs entre guillemets
+                    const values = lines[i].match(/(".*?"|[^;]+)/g) || [];
                     
-                    if (!values || values.length < 6) continue;
+                    if (values.length < 6) continue;
 
                     const date = values[0].replace(/"/g, '').trim();
                     const description = values[1].replace(/"/g, '').trim();
@@ -1610,6 +1702,7 @@
                     currentMonthData.transactions = newTransactions;
                     sauvegarderTransactions(false); 
                     rechargerTableau();
+                    showScreen('dashboard-screen'); // Retourne à l'onglet principal
                     showModal(`${newTransactions.length} transactions importées et sauvegardées !`, 'success', 5000);
                 } else {
                     showModal("Aucune transaction valide n'a pu être lue dans le fichier.", 'error');
@@ -1625,10 +1718,15 @@
             loadThemePreference();
             chargerSelecteurs(); 
             
+            chargerListeMois(); // Charge le premier onglet disponible ou crée un nouveau mois
+            
+            // Démarrer sur le Tableau de Bord
             showScreen('dashboard-screen');
-            chargerListeMois();
-            document.getElementById('date').value = new Date().toISOString().substring(0, 10);
-            document.getElementById('r-prochaine-echeance').value = new Date().toISOString().substring(0, 10);
+            
+            // Initialiser les dates
+            const today = new Date().toISOString().substring(0, 10);
+            document.getElementById('date').value = today;
+            document.getElementById('r-prochaine-echeance').value = today;
         }
 
         init();
