@@ -216,7 +216,7 @@
             padding: 5px 10px;
             font-size: 0.8em;
             text-transform: none;
-            margin-left: auto; 
+            /* margin-left: auto; */
             border: 1px solid var(--neon-accent);
         }
         .compact-switch-btn:hover {
@@ -661,14 +661,20 @@
                     <input type="number" id="solde-ouverture" value="0.00" min="0" step="0.01" onchange="sauvegarderTransactions(false)">
                     <span style="font-size: 0.8em; color: var(--light-text-color);"> (Solde du mois précédent)</span>
                 </div>
-                <div>
-                    <label for="current-month">Nom de l'onglet :</label>
-                    <input type="text" id="current-month" value="Janvier 2026" required>
-                    <button onclick="sauvegarderTransactions()" class="app-btn save-btn"><i class="fas fa-save"></i> Sauvegarder</button>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        
+                    <label for="select-month" style="white-space: nowrap;">Onglet Actuel :</label>
+
+                    <button onclick="naviguerMois(-1)" class="app-btn compact-switch-btn" title="Mois Précédent" style="flex: 0 0 auto;"><i class="fas fa-chevron-left"></i></button>
+
+                    <select id="select-month" onchange="chargerTransactions()" style="flex-grow: 1; min-width: 150px;"></select>
                     
-                    <label for="select-month">Charger / Nouveau :</label>
-                    <select id="select-month" onchange="chargerTransactions()"></select>
-                    <button onclick="supprimerMoisSelectionne()" class="app-btn delete-btn"><i class="fas fa-trash-alt"></i> Supprimer l'onglet</button>
+                    <button onclick="naviguerMois(1)" class="app-btn compact-switch-btn" title="Mois Suivant" style="flex: 0 0 auto;"><i class="fas fa-chevron-right"></i></button>
+                    
+                    <input type="text" id="current-month" value="Janvier 2026" required style="flex-grow: 1; min-width: 150px;">
+                    <button onclick="sauvegarderTransactions()" class="app-btn save-btn" style="flex: 1 1 100px;"><i class="fas fa-save"></i> Sauvegarder</button>
+                    <button onclick="supprimerMoisSelectionne()" class="app-btn delete-btn" style="flex: 1 1 100px;"><i class="fas fa-trash-alt"></i> Supprimer l'onglet</button>
+
                 </div>
             </div>
 
@@ -1388,24 +1394,19 @@
         }
 
         function gererNouveauMois() {
-            const monthToLoad = selectMonth.value;
-
-            if (monthToLoad === 'new') {
-                const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-                const monthNames = Object.keys(allData).sort().reverse();
+            const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            // Trie chronologique pour trouver le dernier mois
+            const monthNames = Object.keys(allData).sort(comparerMois).reverse(); 
+            
+            if (monthNames.length > 0) {
+                const lastMonthName = monthNames[0];
+                const lastMonthData = JSON.parse(allData[lastMonthName]);
                 
-                if (monthNames.length > 0) {
-                    const lastMonthName = monthNames[0];
-                    const lastMonthData = JSON.parse(allData[lastMonthName]);
-                    
-                    const { solde: soldeCloture } = calculerSoldePrecedent(lastMonthData);
+                const { solde: soldeCloture } = calculerSoldePrecedent(lastMonthData);
 
-                    preparerNouvelOnglet(soldeCloture, lastMonthName);
-                } else {
-                    preparerNouvelOnglet(0);
-                }
+                preparerNouvelOnglet(soldeCloture, lastMonthName);
             } else {
-                chargerTransactions();
+                preparerNouvelOnglet(0);
             }
         }
         
@@ -1446,9 +1447,29 @@
             gererNouveauMois();
         }
 
+        // Fonction utilitaire pour trier les noms de mois (nécessaire pour la navigation)
+        function comparerMois(a, b) {
+            // Fonction simple pour parser "Mois Année" en objet Date pour la comparaison
+            const parseMonth = (monthName) => {
+                const [monthStr, yearStr] = monthName.split(' ');
+                const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+                const monthIndex = monthNames.indexOf(monthStr.toLowerCase());
+                
+                if (monthIndex === -1) return new Date(parseInt(yearStr), 0, 1);
+                
+                return new Date(parseInt(yearStr), monthIndex, 1);
+            };
+
+            const dateA = parseMonth(a);
+            const dateB = parseMonth(b);
+            
+            return dateA - dateB; // Trie du plus ancien au plus récent
+        }
+        
         function chargerListeMois(selectedMonth = null) {
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort().reverse(); 
+            // Utiliser la fonction de tri pour avoir la bonne chronologie (et inverser pour l'affichage)
+            const monthNames = Object.keys(allData).sort(comparerMois).reverse(); 
             
             selectMonth.innerHTML = ''; 
             
@@ -1476,6 +1497,30 @@
                  chargerTransactions();
             } else {
                  gererNouveauMois();
+            }
+        }
+        
+        function naviguerMois(direction) {
+            const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            // La liste des mois triée chronologiquement est la clé pour naviguer
+            const monthNames = Object.keys(allData).sort(comparerMois); 
+            
+            const currentIndex = monthNames.indexOf(selectMonth.value);
+            
+            // Si le mois actuel n'est pas trouvé ou si c'est "Nouveau Mois", on ne navigue pas.
+            if (currentIndex === -1 || selectMonth.value === 'new') {
+                showModal("Veuillez sélectionner un mois valide pour naviguer.", 'error');
+                return;
+            }
+            
+            let newIndex = currentIndex + direction;
+            
+            // Assurez-vous que l'index reste dans les limites de la liste des mois
+            if (newIndex >= 0 && newIndex < monthNames.length) {
+                selectMonth.value = monthNames[newIndex];
+                chargerTransactions();
+            } else {
+                showModal(direction === -1 ? "Vous êtes sur le mois le plus ancien enregistré." : "Vous êtes sur le mois le plus récent enregistré.", 'info');
             }
         }
         
@@ -1590,7 +1635,5 @@
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/@vercel/speed-insights/dist/script.js" defer></script>
-    <script defer src="https://cdn.vercel.sh/v1/speed.js"></script>
-    <script defer src="https://cdn.vercel.sh/v1/web-analytics.js"></script>
 </body>
 </html>
