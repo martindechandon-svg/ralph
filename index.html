@@ -840,11 +840,13 @@
                 </div>
                 
                 <div class="chart-container" style="flex: 1 1 450px;">
-                    <h3><i class="fas fa-chart-bar"></i> Solde Historique (futur)</h3>
-                    <p style="color: var(--light-text-color);">Fonctionnalité en cours de développement pour afficher l'évolution du solde entre les mois.</p>
-                    <div style="height: 350px; background-color: var(--input-bg); border-radius: 8px;"></div>
+                    <h3><i class="fas fa-chart-bar"></i> Solde Historique des Mois</h3>
+                    <p style="color: var(--light-text-color);">Affiche l'évolution du solde de clôture entre tous les mois enregistrés.</p>
+                    <div id="balance-chart-container" style="height: 350px;">
+                        <canvas id="balance-history-chart"></canvas>
+                    </div>
                 </div>
-            </div>
+                </div>
             
         </div>
 
@@ -944,6 +946,7 @@
         let transactions = currentMonthData.transactions; 
         let recurrences = []; 
         let chartInstance;
+        let historyChartInstance; // AJOUTÉ : Instance pour le graphique historique
         
         const CATEGORIES = {
             revenu: ["Salaire", "Vente", "Cadeau", "Investissement", "Autres Revenus"],
@@ -1039,6 +1042,7 @@
             if (screenId === 'analysis-screen') {
                 mettreAJourSoldeEtTotaux();
                 mettreAJourGraphique();
+                mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique
                 mettreAJourSuiviBudget(); // S'assurer que le suivi budgétaire est mis à jour
                 genererChampsBudget(); // S'assurer que les champs de budget sont chargés
             }
@@ -1067,6 +1071,7 @@
             const isLight = body.classList.contains('light-mode');
             localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
             mettreAJourGraphique();
+            mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique
         }
 
         function loadThemePreference() {
@@ -1488,6 +1493,134 @@
                 }
             });
         }
+        
+        // DÉBUT AJOUT SOLDE HISTORIQUE
+        
+        /**
+         * Récupère les soldes de clôture de tous les mois enregistrés dans le localStorage.
+         * @returns {Array<Object>} Liste des objets { month: string, balance: number } triés chronologiquement.
+         */
+        function getHistoricalBalances() {
+            let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            const monthNames = Object.keys(allData).sort(comparerMois); // Trie chronologiquement
+        
+            const historicalData = monthNames.map(monthName => {
+                // S'assurer que les données sont valides pour le calcul
+                const rawData = allData[monthName] ? JSON.parse(allData[monthName]) : { transactions: [], soldeOuverture: 0 };
+                
+                // Utiliser la fonction de calcul de solde existante
+                const { solde } = calculerSoldePrecedent(rawData); 
+                
+                return { 
+                    month: monthName, 
+                    balance: solde 
+                };
+            });
+        
+            return historicalData;
+        }
+
+        /**
+         * Met à jour le graphique de l'historique des soldes de clôture.
+         */
+        function mettreAJourGraphiqueHistorique() {
+            const historicalData = getHistoricalBalances();
+
+            if (!document.getElementById('balance-history-chart')) return;
+            
+            // Détruire l'instance précédente
+            if (historyChartInstance) {
+                historyChartInstance.destroy();
+            }
+            
+            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF'; 
+            const accentColor = body.classList.contains('light-mode') ? '#007AFF' : '#00FFFF';
+
+            const labels = historicalData.map(d => d.month);
+            const data = historicalData.map(d => d.balance);
+
+            if (data.length === 0) {
+                 const balanceChartContainer = document.getElementById('balance-chart-container');
+                 balanceChartContainer.innerHTML = '<p style="color: var(--light-text-color); text-align:center; padding-top: 150px;">Aucune donnée de mois enregistrée pour l\'historique. Créez et sauvegardez plusieurs onglets.</p>';
+                 return;
+            } else {
+                 // Restaurer le canvas s'il a été remplacé par le message
+                 document.getElementById('balance-chart-container').innerHTML = '<canvas id="balance-history-chart"></canvas>';
+            }
+
+            const ctx = document.getElementById('balance-history-chart').getContext('2d');
+            
+            historyChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Solde de Clôture (€)',
+                        data: data,
+                        borderColor: accentColor,
+                        backgroundColor: body.classList.contains('light-mode') ? 'rgba(0, 122, 255, 0.1)' : 'rgba(0, 255, 255, 0.2)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: textColor,
+                                font: { family: 'Poppins' }
+                            }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.formattedValue + ' €';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Solde (€)',
+                                color: textColor,
+                                font: { family: 'Poppins' }
+                            },
+                            ticks: {
+                                color: textColor,
+                                font: { family: 'Poppins' }
+                            },
+                            grid: {
+                                color: body.classList.contains('light-mode') ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Mois',
+                                color: textColor,
+                                font: { family: 'Poppins' }
+                            },
+                            ticks: {
+                                color: textColor,
+                                font: { family: 'Poppins' }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // FIN AJOUT SOLDE HISTORIQUE
+
 
         function sauvegarderTransactions(showMessage = true) {
             const currentMonthName = currentMonthInput.value.trim();
@@ -1506,6 +1639,7 @@
             chargerListeMois(currentMonthName);
             mettreAJourSuiviBudget();
             mettreAJourGraphique(); // Mettre à jour les graphiques après la sauvegarde
+            mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique après sauvegarde
             
             if (showMessage) {
                 showModal(`Onglet "${currentMonthName}" sauvegardé avec succès !`, 'success');
@@ -1539,6 +1673,7 @@
                 // Mettre à jour l'analyse si on charge un mois
                 if (document.getElementById('analysis-screen').classList.contains('active')) {
                     mettreAJourGraphique();
+                    mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique lors du chargement
                     mettreAJourSoldeEtTotaux();
                     mettreAJourSuiviBudget();
                 }
@@ -1596,6 +1731,7 @@
                 const lastMonthName = monthNames[0];
                 const lastMonthData = JSON.parse(allData[lastMonthName]);
                 
+                // On doit recalculer le solde de clôture du DERNIER mois sauvegardé
                 const { solde: soldeCloture } = calculerSoldePrecedent(lastMonthData);
 
                 preparerNouvelOnglet(soldeCloture, lastMonthName);
