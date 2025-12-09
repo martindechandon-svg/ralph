@@ -35,23 +35,22 @@
 
         /* Thème Clair (Light Mode) -- NOUVEAU STYLE */
         body.light-mode {
-            --bg-color: #F8F9FA; /* Gris très clair */
-            --card-color: #FFFFFF; /* Blanc pur pour les cartes */
-            --text-color: #212529; /* Noir pour le texte principal */
-            --light-text-color: #6C757D; /* Gris foncé pour le texte secondaire */
-            --border-color: #DEE2E6; /* Bordure très fine */
-            --input-bg: #F0F3F6; /* Gris légèrement plus soutenu pour les inputs */
+            --bg-color: #F8F9FA; 
+            --card-color: #FFFFFF; 
+            --text-color: #212529; 
+            --light-text-color: #6C757D; 
+            --border-color: #DEE2E6; 
+            --input-bg: #F0F3F6; 
             
-            --neon-accent: #007BFF; /* Bleu primaire vif */
+            --neon-accent: #007BFF; 
             --neon-success: #28A745;
             --neon-danger: #DC3545;
             --neon-warning: #FFC107;
             
-            /* OMBRE PLUS MARQUÉE ET PROFESSIONNELLE */
             --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.1); 
             --shadow-deep: 0 8px 25px rgba(0, 0, 0, 0.15);
             
-            --table-header-bg: #007BFF; /* En-tête de tableau bleu vif */
+            --table-header-bg: #007BFF; 
             --table-row-sep: #E9ECEF; 
         }
         
@@ -108,35 +107,28 @@
             justify-content: space-between;
             align-items: center;
         }
-        /* MISE À JOUR POUR LIGHT MODE : h1 n'a plus de néon et devient noir */
         body.light-mode h1 { 
             text-shadow: none; 
             color: var(--text-color); 
         }
         h2 { 
             font-size: 1.8em; 
-            /* Permet l'alignement du bouton compact à droite */
             justify-content: flex-start;
         }
         
         /* Style pour l'image du logo dans le H1 */
         .app-logo {
-            /* TAILLE DU LOGO (80px x 80px) */
             width: 80px; 
             height: 80px; 
             margin-right: 10px;
             border-radius: 50%;
-            /* Ajout d'une légère bordure ou ombre pour la distinguer */
             box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-            /* S'assurer que l'image remplit la zone sans déformation */
             object-fit: cover; 
         }
-        /* MISE À JOUR POUR LIGHT MODE : L'OMBRE du logo est subtile */
         body.light-mode .app-logo {
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); 
         }
         body.light-mode h1 .app-logo + span {
-            /* S'assurer que le sous-texte (tagline) reste accentué */
             color: var(--neon-accent);
             text-shadow: none;
         }
@@ -175,19 +167,19 @@
             text-transform: uppercase;
         }
         
-        .add-btn { /* Bouton Ajouter Transaction */
+        .add-btn { 
             background-color: var(--neon-success);
             color: var(--card-color);
         }
         .add-btn:hover { opacity: 0.9; box-shadow: 0 0 15px var(--neon-success); }
         
-        .save-btn { /* Bouton Sauvegarder/Mettre à jour */
+        .save-btn { 
             background-color: var(--neon-accent);
             color: var(--card-color);
         }
         .save-btn:hover { opacity: 0.9; box-shadow: 0 0 15px var(--neon-accent); }
 
-        .delete-btn { /* Boutons de suppression (Ligne de transaction ou Onglet) */
+        .delete-btn { 
             background-color: var(--neon-danger);
             color: white;
             padding: 8px 15px; 
@@ -197,7 +189,6 @@
         }
         .delete-btn:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(255, 51, 102, 0.5); }
         
-        /* Style pour le bouton compact et discret */
         .compact-switch-btn {
             background-color: transparent; 
             color: var(--neon-accent);
@@ -205,7 +196,7 @@
             padding: 5px 10px;
             font-size: 0.8em;
             text-transform: none;
-            margin-left: auto; /* Pousse le bouton à droite dans le H2 */
+            margin-left: auto; 
             border: 1px solid var(--neon-accent);
         }
         .compact-switch-btn:hover {
@@ -213,14 +204,12 @@
             color: var(--card-color);
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
-        /* MISE À JOUR POUR LIGHT MODE : L'ombre du bouton compact en light mode est désactivée */
         body.light-mode .compact-switch-btn:hover {
             box-shadow: none;
         }
 
         /* --- FORMULAIRES DE TABLEAU DE BORD (Mise en page) --- */
         
-        /* Formulaire d'ajout de transaction */
         #transaction-form, #recurrence-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -230,7 +219,6 @@
             margin-bottom: 20px;
             background-color: var(--input-bg);
         }
-        /* MISE À JOUR POUR LIGHT MODE : Le fond des formulaires est très clair */
         body.light-mode #transaction-form, 
         body.light-mode #recurrence-form {
             background-color: var(--card-color); 
@@ -240,7 +228,7 @@
         #transaction-form input, #transaction-form select,
         #recurrence-form input, #recurrence-form select {
             width: 100%;
-            background-color: var(--card-color); /* Fonds plus clair dans les formulaires */
+            background-color: var(--card-color); 
         }
         
         /* Gestion des Onglets (Mois) */
@@ -253,7 +241,6 @@
             flex-direction: column;
             gap: 20px;
         }
-        /* MISE À JOUR POUR LIGHT MODE : Le fond de la gestion des onglets est très clair */
         body.light-mode .gestion-onglets {
             background-color: var(--card-color);
         }
@@ -294,29 +281,25 @@
             text-transform: uppercase;
             font-size: 0.9em;
         }
-        /* MISE À JOUR POUR LIGHT MODE : Couleur du texte des en-têtes en blanc pour contraster avec le fond bleu vif */
         body.light-mode th { 
             color: white; 
         }
         
         .revenue-row { background-color: rgba(0, 255, 153, 0.1); color: var(--neon-success); }
         .expense-row { background-color: rgba(255, 51, 102, 0.1); color: var(--neon-danger); }
-        /* MISE À JOUR POUR LIGHT MODE : Fonds des lignes plus subtils */
         body.light-mode .revenue-row { background-color: rgba(40, 167, 69, 0.05); color: var(--neon-success); }
         body.light-mode .expense-row { background-color: rgba(220, 53, 69, 0.05); color: var(--neon-danger); }
         
-        /* Style pour les colonnes de Montant (lisibilité) */
         #transaction-list td:nth-child(6), 
         #recurrence-list td:nth-child(2) { 
             font-weight: 600;
-            text-align: right; /* ALIGNEMENT AMÉLIORÉ */
+            text-align: right; 
         }
         #transaction-list th:nth-child(6), 
         #recurrence-list th:nth-child(2) {
-             text-align: right; /* ALIGNEMENT AMÉLIORÉ */
+             text-align: right; 
         }
         
-        /* Colonne d'action */
         td:last-child {
             width: 100px; 
             text-align: center;
@@ -340,7 +323,6 @@
             background-color: var(--input-bg);
             box-shadow: var(--shadow-deep);
         }
-        /* MISE À JOUR POUR LIGHT MODE : Le fond des conteneurs de graphiques est blanc */
         body.light-mode .chart-container {
             background-color: var(--card-color);
         }
@@ -406,13 +388,33 @@
             margin: 0;
         }
         
-        /* --- STYLE DU SWITCHER DE THÈME --- */
+        /* --- STYLE DU SWITCHER DE THÈME (MIS À JOUR) --- */
         #theme-switcher { 
             position: absolute; 
             top: 40px; 
             right: 40px; 
             z-index: 1000; 
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espace entre les labels et le switch */
+            font-weight: 600;
         }
+        
+        .theme-label {
+            transition: color 0.3s;
+            font-size: 0.9em;
+            color: var(--light-text-color); /* Couleur par défaut (éteint) */
+        }
+
+        /* Label actif en Dark Mode */
+        body:not(.light-mode) #dark-label {
+            color: var(--neon-accent); /* S'allume en Dark Mode */
+        }
+        /* Label actif en Light Mode */
+        body.light-mode #light-label {
+            color: var(--neon-accent); /* S'allume en Light Mode */
+        }
+
         .theme-switch { 
             width: 50px; 
             height: 25px; 
@@ -462,7 +464,6 @@
             align-items: center;
             justify-content: flex-start;
         }
-        /* MISE À JOUR POUR LIGHT MODE : Le fond de la section transferts est clair */
         body.light-mode .transfer-section {
             background-color: var(--card-color);
         }
@@ -486,12 +487,12 @@
         
         /* --- NOUVEAU: MODALE DE NOTIFICATION --- */
         #notification-modal {
-            display: none; /* Caché par défaut */
+            display: none; 
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 2000; /* Assurez-vous qu'il est au-dessus de tout */
+            z-index: 2000; 
             padding: 20px 30px;
             border-radius: var(--border-radius);
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0,0,0,0.8);
@@ -544,7 +545,7 @@
             .container { padding: 20px; }
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
-            .compact-switch-btn { margin-left: 10px; } /* Ajustement pour petit écran */
+            .compact-switch-btn { margin-left: 10px; } 
 
             #transaction-form, #recurrence-form {
                 grid-template-columns: 1fr;
@@ -559,18 +560,24 @@
             .gestion-onglets input, .gestion-onglets select {
                 max-width: none;
             }
-            table th, table td { padding: 8px 10px; font-size: 0.85em; } /* Taille réduite sur mobile */
+            table th, table td { padding: 8px 10px; font-size: 0.85em; } 
             .transfer-section {
                 flex-direction: column;
                 align-items: stretch;
+            }
+            #theme-switcher {
+                right: 20px; 
+                top: 20px;
             }
         }
     </style>
 </head>
 <body>
     
-    <div id="theme-switcher" onclick="toggleTheme()">
-        <div class="theme-switch"></div>
+    <div id="theme-switcher">
+        <span id="dark-label" class="theme-label">Dark</span>
+        <div class="theme-switch" onclick="toggleTheme()"></div>
+        <span id="light-label" class="theme-label">Light</span>
     </div>
     
     <div id="notification-modal" class="modal-info">
@@ -765,7 +772,6 @@
         const STORAGE_KEY = 'comptes_dashboard_data'; 
         const RECURRENCE_KEY = 'ralph_recurrence_master_list'; 
         const THEME_KEY = 'budget_theme_preference';
-        // AUTH_KEY SUPPRIMÉ
         
         let currentMonthData = {
             transactions: [],
@@ -810,9 +816,7 @@
         const modalMessage = document.getElementById('modal-message');
         const modalIcon = document.getElementById('modal-icon');
         
-        // loginForm et registerForm SUPPRIMÉS
-
-
+        
         // --- NOUVEAU: GESTION DE LA MODALE ---
         function showModal(message, type = 'info', duration = 3000) {
             modalMessage.textContent = message;
@@ -850,9 +854,6 @@
             });
             document.getElementById(screenId).classList.add('active');
             
-            // Le Theme Switcher reste visible sur les deux écrans
-            
-            // Charger les données spécifiques si on passe à l'écran de récurrence
             if (screenId === 'recurrence-page') {
                 chargerRecurrences();
             }
@@ -955,7 +956,6 @@
         }
         
         function supprimerRecurrence(index) {
-            // Utilisation de confirm() car c'est une action de suppression
             if (confirm("Voulez-vous vraiment supprimer cette récurrence de la liste Maître ?")) {
                 recurrences.splice(index, 1);
                 sauvegarderRecurrences();
@@ -969,7 +969,6 @@
                 return;
             }
             
-            // Utilisation de confirm() car c'est une action de masse
             if (!confirm(`Voulez-vous ajouter les ${recurrences.length} récurrences définies à l'onglet actuel (${currentMonthInput.value}) ?`)) {
                 return;
             }
@@ -1097,7 +1096,6 @@
 
         
         function supprimerTransaction(index) {
-             // Utilisation de confirm() car c'est une action de suppression
             if (!confirm("Êtes-vous sûr de vouloir supprimer cette transaction ?")) { 
                 return;
             }
@@ -1309,9 +1307,7 @@
             transactions = currentMonthData.transactions;
             
             const nextMonth = new Date();
-            // Utiliser le mois suivant le dernier mois chargé (si disponible) ou le mois actuel + 1
             if (moisPrecedentNom) {
-                // Tentative de déduire la date (très simplifiée, peut être améliorée)
                 const parts = moisPrecedentNom.split(' ');
                 const year = parseInt(parts.pop());
                 const month = parts.join(' ');
@@ -1323,7 +1319,7 @@
 
                 if (monthIndex !== -1) {
                     nextMonth.setFullYear(year);
-                    nextMonth.setMonth(monthIndex + 1); // Passer au mois suivant
+                    nextMonth.setMonth(monthIndex + 1); 
                 } else {
                     nextMonth.setMonth(nextMonth.getMonth() + 1);
                 }
@@ -1386,7 +1382,6 @@
                 return;
             }
             
-             // Utilisation de confirm() car c'est une action de suppression
             if (!confirm(`Êtes-vous sûr de vouloir supprimer DÉFINITIVEMENT l'onglet "${monthToDelete}" ?`)) {
                 return;
             }
@@ -1496,10 +1491,8 @@
                     return;
                 }
 
-                // Supposons que la première ligne est l'en-tête (ignorée)
                 const newTransactions = [];
                 for (let i = 1; i < lines.length; i++) {
-                    // Utilisation d'une regex simplifiée pour les valeurs entre guillemets séparées par des points-virgules
                     const values = lines[i].match(/(?:"[^"]*"|[^;])+/g); 
                     
                     if (!values || values.length < 6) continue;
@@ -1520,7 +1513,7 @@
                 
                 if (newTransactions.length > 0) {
                     currentMonthData.transactions = newTransactions;
-                    sauvegarderTransactions(false); // Sauvegarde silencieuse
+                    sauvegarderTransactions(false); 
                     rechargerTableau();
                     showModal(`${newTransactions.length} transactions importées et sauvegardées !`, 'success', 5000);
                 } else {
@@ -1528,7 +1521,7 @@
                 }
             };
             reader.readAsText(file, 'UTF-8');
-            document.getElementById('csv-file').value = ''; // Réinitialiser le champ après l'importation
+            document.getElementById('csv-file').value = ''; 
         }
 
 
@@ -1537,7 +1530,6 @@
             loadThemePreference();
             chargerSelecteurs(); 
             
-            // Démarrage direct sur le tableau de bord
             showScreen('dashboard-screen');
             chargerListeMois();
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
