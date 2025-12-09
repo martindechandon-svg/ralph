@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Ralphy - Aide gratuite à la gestion des comptes</title>
+    <title>⚡ Ralph - Aide gratuite à la gestion des comptes</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -33,24 +33,26 @@
             --table-row-sep: #3B3B5B;
         }
 
-        /* Thème Clair (Light Mode) */
+        /* Thème Clair (Light Mode) -- NOUVEAU STYLE */
         body.light-mode {
-            --bg-color: #F4F7F9;
-            --card-color: #FFFFFF;
-            --text-color: #37474F;
-            --light-text-color: #78909C;
-            --border-color: #CFD8DC;
-            --input-bg: #EFEFEF;
+            --bg-color: #F8F9FA; /* Gris très clair */
+            --card-color: #FFFFFF; /* Blanc pur pour les cartes */
+            --text-color: #212529; /* Noir pour le texte principal */
+            --light-text-color: #6C757D; /* Gris foncé pour le texte secondaire */
+            --border-color: #DEE2E6; /* Bordure très fine */
+            --input-bg: #F0F3F6; /* Gris légèrement plus soutenu pour les inputs */
             
-            --neon-accent: #5C6BC0;
+            --neon-accent: #007BFF; /* Bleu primaire vif */
             --neon-success: #28A745;
             --neon-danger: #DC3545;
             --neon-warning: #FFC107;
             
-            --shadow-glow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            --shadow-deep: 0 8px 20px rgba(0, 0, 0, 0.15);
-            --table-header-bg: #5C6BC0;
-            --table-row-sep: #F0F4F7;
+            /* OMBRE PLUS MARQUÉE ET PROFESSIONNELLE */
+            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+            --shadow-deep: 0 8px 25px rgba(0, 0, 0, 0.15);
+            
+            --table-header-bg: #007BFF; /* En-tête de tableau bleu vif */
+            --table-row-sep: #E9ECEF; 
         }
         
         /* --- STYLES GÉNÉRAUX ET COMMUNS --- */
@@ -106,7 +108,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        body.light-mode h1 { text-shadow: none; }
+        /* MISE À JOUR POUR LIGHT MODE : h1 n'a plus de néon et devient noir */
+        body.light-mode h1 { 
+            text-shadow: none; 
+            color: var(--text-color); 
+        }
         h2 { 
             font-size: 1.8em; 
             /* Permet l'alignement du bouton compact à droite */
@@ -125,8 +131,14 @@
             /* S'assurer que l'image remplit la zone sans déformation */
             object-fit: cover; 
         }
+        /* MISE À JOUR POUR LIGHT MODE : L'OMBRE du logo est subtile */
         body.light-mode .app-logo {
-            box-shadow: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); 
+        }
+        body.light-mode h1 .app-logo + span {
+            /* S'assurer que le sous-texte (tagline) reste accentué */
+            color: var(--neon-accent);
+            text-shadow: none;
         }
 
 
@@ -201,6 +213,10 @@
             color: var(--card-color);
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
+        /* MISE À JOUR POUR LIGHT MODE : L'ombre du bouton compact en light mode est désactivée */
+        body.light-mode .compact-switch-btn:hover {
+            box-shadow: none;
+        }
 
         /* --- FORMULAIRES DE TABLEAU DE BORD (Mise en page) --- */
         
@@ -214,25 +230,17 @@
             margin-bottom: 20px;
             background-color: var(--input-bg);
         }
+        /* MISE À JOUR POUR LIGHT MODE : Le fond des formulaires est très clair */
+        body.light-mode #transaction-form, 
+        body.light-mode #recurrence-form {
+            background-color: var(--card-color); 
+            border: 1px solid var(--border-color);
+        }
         
         #transaction-form input, #transaction-form select,
         #recurrence-form input, #recurrence-form select {
             width: 100%;
             background-color: var(--card-color); /* Fonds plus clair dans les formulaires */
-        }
-        
-        #transaction-form .add-btn, #recurrence-form .add-btn {
-            grid-column: span 2; 
-            min-width: 100px;
-        }
-        #transaction-form .add-btn {
-            grid-column: span 1; 
-        }
-        #transaction-form label, #recurrence-form label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--light-text-color);
         }
         
         /* Gestion des Onglets (Mois) */
@@ -245,20 +253,8 @@
             flex-direction: column;
             gap: 20px;
         }
-        .gestion-onglets > div {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
-        }
-        .gestion-onglets label {
-            color: var(--light-text-color);
-            font-weight: 500;
-        }
-        .gestion-onglets input, .gestion-onglets select {
-            flex-grow: 1;
-            min-width: 150px;
-            max-width: 250px;
+        /* MISE À JOUR POUR LIGHT MODE : Le fond de la gestion des onglets est très clair */
+        body.light-mode .gestion-onglets {
             background-color: var(--card-color);
         }
         
@@ -298,12 +294,16 @@
             text-transform: uppercase;
             font-size: 0.9em;
         }
-        body.light-mode th { color: white; }
+        /* MISE À JOUR POUR LIGHT MODE : Couleur du texte des en-têtes en blanc pour contraster avec le fond bleu vif */
+        body.light-mode th { 
+            color: white; 
+        }
         
         .revenue-row { background-color: rgba(0, 255, 153, 0.1); color: var(--neon-success); }
         .expense-row { background-color: rgba(255, 51, 102, 0.1); color: var(--neon-danger); }
-        body.light-mode .revenue-row { background-color: #E8F5E9; color: var(--neon-success); }
-        body.light-mode .expense-row { background-color: #FFEBEE; color: var(--neon-danger); }
+        /* MISE À JOUR POUR LIGHT MODE : Fonds des lignes plus subtils */
+        body.light-mode .revenue-row { background-color: rgba(40, 167, 69, 0.05); color: var(--neon-success); }
+        body.light-mode .expense-row { background-color: rgba(220, 53, 69, 0.05); color: var(--neon-danger); }
         
         /* Style pour les colonnes de Montant (lisibilité) */
         #transaction-list td:nth-child(6), 
@@ -339,6 +339,10 @@
             border-radius: var(--border-radius);
             background-color: var(--input-bg);
             box-shadow: var(--shadow-deep);
+        }
+        /* MISE À JOUR POUR LIGHT MODE : Le fond des conteneurs de graphiques est blanc */
+        body.light-mode .chart-container {
+            background-color: var(--card-color);
         }
         
         #solde {
@@ -457,6 +461,10 @@
             gap: 15px;
             align-items: center;
             justify-content: flex-start;
+        }
+        /* MISE À JOUR POUR LIGHT MODE : Le fond de la section transferts est clair */
+        body.light-mode .transfer-section {
+            background-color: var(--card-color);
         }
         .transfer-section label {
             color: var(--light-text-color);
