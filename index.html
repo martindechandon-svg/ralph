@@ -352,7 +352,7 @@
             border: 1px solid var(--border-color);
         }
         
-        /* Nouveau style pour le Solde sur la page Analyse */
+        /* Style du grand Solde sur la page Analyse */
         #solde-analysis {
             display: inline-block;
             padding: 15px 30px;
@@ -372,6 +372,41 @@
             color: var(--card-color);
             box-shadow: 0 0 20px var(--neon-danger);
         }
+        
+        /* --- NOUVEAU STYLE POUR LE SOLDE PERSISTANT --- */
+        #persistent-balance {
+            display: flex; 
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-size: 1.1em; 
+            font-weight: 500;
+            background-color: var(--input-bg); 
+            box-shadow: var(--shadow-deep);
+            max-width: fit-content;
+            margin-bottom: 20px; 
+            float: right; 
+            clear: right; 
+        }
+        body.light-mode #persistent-balance {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+        }
+        #persistent-balance .balance-amount {
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: var(--card-color); 
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        #persistent-balance .positif {
+            background-color: var(--neon-success);
+        }
+        #persistent-balance .negatif {
+            background-color: var(--neon-danger);
+        }
+
 
         /* Style des cartes de suivi budgétaire */
         #budget-section {
@@ -648,6 +683,12 @@
                 right: 20px; 
                 top: 20px;
             }
+            #persistent-balance {
+                float: none;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
@@ -674,8 +715,12 @@
                 <span style="font-size: 0.4em; font-weight: 400; color: var(--neon-accent); text-shadow: var(--neon-accent) 0 0 2px;">t'aide gratuitement à faire tes comptes</span>
             </div>
         </h1>
-        
-        <nav id="main-nav">
+
+        <div id="persistent-balance">
+            Solde Actuel:
+            <span id="solde-value-persistent" class="balance-amount positif">0.00 €</span>
+        </div>
+        <div style="clear:both;"></div> <nav id="main-nav">
             <button class="nav-btn active" data-screen="dashboard-screen"><i class="fas fa-tachometer-alt"></i> Tableau de Bord</button>
             <button class="nav-btn" data-screen="analysis-screen"><i class="fas fa-chart-line"></i> Analyse</button>
             <button class="nav-btn" data-screen="recurrence-page"><i class="fas fa-sync-alt"></i> Récurrences</button>
@@ -851,9 +896,14 @@
             <hr class="separator">
 
             <h2><i class="fas fa-file-import"></i> Importer des données (CSV)</h2>
-            <div class="transfer-section">
-                <label for="csv-file">Sélectionner un fichier CSV de transactions :</label>
-                <input type="file" id="csv-file" accept=".csv" onchange="importFromCSV(event)">
+            <div class="transfer-section" style="flex-direction: column; align-items: flex-start;">
+                <input type="file" id="csv-file" accept=".csv" onchange="importFromCSV(event)" style="display: none;">
+                
+                <button onclick="document.getElementById('csv-file').click()" 
+                        class="app-btn export-btn">
+                    <i class="fas fa-upload"></i> Importer les Transactions (CSV)
+                </button>
+                
                 <span style="font-size: 0.9em; color: var(--neon-warning);">⚠️ L'importation remplace **toutes** les transactions actuelles de l'onglet actif.</span>
             </div>
             
@@ -889,13 +939,14 @@
 
         // Références aux éléments HTML
         const body = document.body;
-        const navButtons = document.querySelectorAll('.nav-btn'); // NOUVEAU
+        const navButtons = document.querySelectorAll('.nav-btn'); 
         const form = document.getElementById('transaction-form');
         const transactionList = document.getElementById('transaction-list');
         
-        const soldeAnalysisDiv = document.getElementById('solde-analysis'); // NOUVEAU
-        const analysisTabName = document.getElementById('analysis-tab-name'); // NOUVEAU
-        const exportTabName = document.getElementById('export-tab-name'); // NOUVEAU
+        const soldeAnalysisDiv = document.getElementById('solde-analysis'); // Solde page Analyse
+        const soldeValuePersistent = document.getElementById('solde-value-persistent'); // NOUVEAU: Solde persistant
+        const analysisTabName = document.getElementById('analysis-tab-name'); 
+        const exportTabName = document.getElementById('export-tab-name'); 
         
         const currentMonthInput = document.getElementById('current-month');
         const selectMonth = document.getElementById('select-month');
@@ -1156,15 +1207,24 @@
         
         function mettreAJourSoldeEtTotaux() {
             const { solde } = calculerSolde();
-            
-            // Mise à jour du solde sur la page Analyse
-            soldeAnalysisDiv.textContent = solde.toFixed(2) + ' €';
+            const soldeFormatted = solde.toFixed(2) + ' €';
 
+            // 1. Mise à jour de la page Analyse (original)
+            soldeAnalysisDiv.textContent = soldeFormatted;
             soldeAnalysisDiv.classList.remove('positif', 'negatif');
             if (solde >= 0) {
                 soldeAnalysisDiv.classList.add('positif');
             } else {
                 soldeAnalysisDiv.classList.add('negatif');
+            }
+
+            // 2. Mise à jour du Solde Persistant (NOUVEAU)
+            soldeValuePersistent.textContent = soldeFormatted;
+            soldeValuePersistent.classList.remove('positif', 'negatif');
+            if (solde >= 0) {
+                soldeValuePersistent.classList.add('positif');
+            } else {
+                soldeValuePersistent.classList.add('negatif');
             }
             
             // Mise à jour des noms d'onglets
@@ -1351,14 +1411,14 @@
                 '#FF3366', '#00FFFF', '#FFDD44', '#00FF99', '#9933FF', '#FF66AA', '#33FFFF', '#6666FF'
             ];
             
-            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF'; // Utilisation des couleurs définies en dur pour Chart.js
+            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF'; 
 
             if (chartInstance) {
                 chartInstance.destroy();
             }
             
             const canvas = document.getElementById('expense-pie-chart');
-            if (!canvas) return; // Sécurité si l'élément n'est pas là
+            if (!canvas) return; 
 
             const ctx = canvas.getContext('2d');
             chartInstance = new Chart(ctx, {
