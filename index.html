@@ -722,14 +722,35 @@
             box-shadow: 0 0 10px var(--neon-accent);
         }
 
-        /* Timeline des mois */
-        .month-timeline {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+		/* Timeline des mois */
+		.month-timeline {
+		    display: flex;
+		    gap: 10px;
+		    margin-top: 15px;
+		    overflow-x: auto;
+		    overflow-y: hidden;
+		    padding: 10px 0;
+		    scroll-behavior: smooth;
+		}
+
+		/* Améliorer l'apparence de la scrollbar */
+		.month-timeline::-webkit-scrollbar {
+		    height: 8px;
+		}
+
+		.month-timeline::-webkit-scrollbar-track {
+		    background: var(--input-bg);
+		    border-radius: 4px;
+		}
+
+		.month-timeline::-webkit-scrollbar-thumb {
+		    background: var(--neon-accent);
+		    border-radius: 4px;
+		}
+
+		.month-timeline::-webkit-scrollbar-thumb:hover {
+		    background: var(--neon-success);
+		}
         .timeline-month {
             padding: 8px 12px;
             border-radius: 6px;
@@ -743,6 +764,36 @@
             align-items: center;
             min-width: 80px;
         }
+		.timeline-month {
+		    position: relative;
+		}
+
+		.delete-month-btn {
+		    position: absolute;
+		    top: 2px;
+		    right: 2px;
+		    background: var(--neon-danger);
+		    color: white;
+		    border: none;
+		    width: 20px;
+		    height: 20px;
+		    border-radius: 50%;
+		    cursor: pointer;
+		    font-size: 0.7em;
+		    display: none;
+		    align-items: center;
+		    justify-content: center;
+		    transition: all 0.2s;
+		}
+
+		.timeline-month:hover .delete-month-btn {
+		    display: flex;
+		}
+
+		.delete-month-btn:hover {
+		    background: #FF0033;
+		    transform: scale(1.1);
+		}
         .timeline-month:hover {
             border-color: var(--neon-accent);
             box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
@@ -1229,12 +1280,12 @@
         const soldeValuePersistent = document.getElementById('solde-value-persistent');
         const analysisTabName = document.getElementById('analysis-tab-name');
         const exportTabName = document.getElementById('export-tab-name');
-        const currentMonthInput = document.getElementById('current-month');
+        const currentMonthInput = document.getElementById('new-month-name');
         const currentMonthDisplay = document.getElementById('current-month-display');
         const monthPositionIndicator = document.getElementById('month-position-indicator');
         const selectMonth = document.getElementById('select-month');
         const currentTabName = document.getElementById('current-tab-name');
-        const soldeOuvertureInput = document.getElementById('solde-ouverture');
+        const soldeOuvertureInput = document.getElementById('new-month-opening-balance');
         const budgetForm = document.getElementById('budget-form');
         const budgetSection = document.getElementById('budget-section');
         const selectCategorie = document.getElementById('categorie');
@@ -1881,7 +1932,7 @@
         }
 
         function chargerTransactions() {
-            const monthToLoad = selectMonth.value;
+            const monthToLoad = currentMonthInput.value;
             if (monthToLoad === 'new') {
                 gererNouveauMois();
                 return;
@@ -1897,6 +1948,7 @@
                 soldeOuvertureInput.value = currentMonthData.soldeOuverture.toFixed(2);
                 genererChampsBudget();
                 rechargerTableau();
+				mettreAJourTimeline();
                 if (document.getElementById('analysis-screen').classList.contains('active')) {
                     mettreAJourGraphique();
                     mettreAJourGraphiqueHistorique();
@@ -1933,6 +1985,16 @@
                 nextMonth.setMonth(nextMonth.getMonth());
             }
             const monthName = nextMonth.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+			
+		    // Vérification de sécurité
+		    if (!currentMonthInput) {
+		        console.error('Element currentMonthInput introuvable');
+		        return;
+		    }
+		    if (!soldeOuvertureInput) {
+		        console.error('Element soldeOuvertureInput introuvable');
+		        return;
+		    }
             currentMonthInput.value = monthName.charAt(0).toUpperCase() + monthName.slice(1);
             soldeOuvertureInput.value = soldePrecedent.toFixed(2);
             genererChampsBudget();
@@ -1942,7 +2004,7 @@
 
         function gererNouveauMois() {
             const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort(comparerMois).reverse();
+            const monthNames = Object.keys(allData).sort(comparerMois);
             if (monthNames.length > 0) {
                 const lastMonthName = monthNames[0];
                 const lastMonthData = JSON.parse(allData[lastMonthName]);
@@ -1972,7 +2034,7 @@
         }
 
         function supprimerMoisSelectionne() {
-            const monthToDelete = selectMonth.value;
+            const monthToDelete = currentMonthInput.value;
             if (monthToDelete === 'new') {
                 showModal("Vous ne pouvez pas supprimer l'option 'Nouveau Mois'.", 'error');
                 return;
@@ -2001,75 +2063,154 @@
             return dateA - dateB;
         }
 
-        function chargerListeMois(selectedMonth = null) {
-            let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort(comparerMois).reverse();
-            selectMonth.innerHTML = '';
-            const newOption = document.createElement('option');
-            newOption.value = 'new';
-            newOption.textContent = '--- Nouveau Mois ---';
-            selectMonth.appendChild(newOption);
-            monthNames.forEach(month => {
-                const option = document.createElement('option');
-                option.value = month;
-                option.textContent = month;
-                selectMonth.appendChild(option);
-            });
-            if (selectedMonth) {
-                selectMonth.value = selectedMonth;
-            } else if (monthNames.length > 0) {
-                selectMonth.value = monthNames[0];
-            } else {
-                selectMonth.value = 'new';
-            }
-            if (selectMonth.value !== 'new') {
-                 chargerTransactions();
-            } else {
-                 gererNouveauMois();
-            }
-            monthPositionIndicator.textContent = `${monthNames.length > 0 ? Object.keys(allData).length : 0}/${monthNames.length} mois`;
-        }
+		function chargerListeMois(selectedMonth = null) {
+		    const selectMonth = document.getElementById('select-month');
+    
+		    if (!selectMonth) {
+		        // Pas d'erreur, juste un retour silencieux
+		        return;
+		    }
+    
+		    let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+		    const monthNames = Object.keys(allData).sort(comparerMois);
+		    selectMonth.innerHTML = '';
+		    const newOption = document.createElement('option');
+		    newOption.value = 'new';
+		    newOption.textContent = '--- Nouveau Mois ---';
+		    selectMonth.appendChild(newOption);
+		    monthNames.forEach(month => {
+		        const option = document.createElement('option');
+		        option.value = month;
+		        option.textContent = month;
+		        selectMonth.appendChild(option);
+		    });
+		    if (selectedMonth) {
+		        currentMonthInput.value = selectedMonth;
+		    } else if (monthNames.length > 0) {
+		        currentMonthInput.value = monthNames[0];
+		    } else {
+		        currentMonthInput.value = 'new';
+		    }
+		    if (currentMonthInput.value !== 'new') {
+		         chargerTransactions();
+		    } else {
+		         gererNouveauMois();
+		    }
+		    monthPositionIndicator.textContent = `${monthNames.length > 0 ? Object.keys(allData).length : 0}/${monthNames.length} mois`;
+			mettreAJourTimeline();
+			
+		}
 
         function naviguerMois(direction) {
             const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
             const monthNames = Object.keys(allData).sort(comparerMois);
-            const currentIndex = monthNames.indexOf(selectMonth.value);
-            if (currentIndex === -1 || selectMonth.value === 'new') {
+            const currentIndex = monthNames.indexOf(currentMonthInput.value);
+            if (currentIndex === -1 || currentMonthInput.value === 'new') {
                 showModal("Veuillez sélectionner un mois valide pour naviguer.", 'error');
                 return;
             }
             let newIndex = currentIndex + direction;
             if (newIndex >= 0 && newIndex < monthNames.length) {
-                selectMonth.value = monthNames[newIndex];
+                currentMonthInput.value = monthNames[newIndex];
                 chargerTransactions();
             } else {
                 showModal(direction === -1 ? "Vous êtes sur le mois le plus ancien enregistré." : "Vous êtes sur le mois le plus récent enregistré.", 'info');
             }
         }
 
-        function mettreAJourTimeline() {
-            const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort(comparerMois).reverse();
-            monthTimeline.innerHTML = '';
-            monthNames.forEach(month => {
-                const monthData = JSON.parse(allData[month]);
-                const { solde } = calculerSoldePrecedent(monthData);
-                const monthCard = document.createElement('div');
-                monthCard.classList.add('timeline-month');
-                if (selectMonth.value === month) {
-                    monthCard.classList.add('active');
-                }
-                monthCard.innerHTML = `
-                    <div class="month-name">${month}</div>
-                    <div class="month-balance">${solde >= 0 ? '+' : ''}${solde.toFixed(2)} €</div>
-                `;
-                monthCard.onclick = () => {
-                    selectMonth.value = month;
-                    chargerTransactions();
-                };
-                monthTimeline.appendChild(monthCard);
-            });
-        }
+		function mettreAJourTimeline() {
+		    const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+		    const monthNames = Object.keys(allData).sort(comparerMois);
+		    monthTimeline.innerHTML = '';
+    
+		    // Utiliser currentMonthInput.value au lieu de selectMonth.value
+		    const currentActiveMonth = currentMonthInput.value;
+    
+		    monthNames.forEach(month => {
+		        const monthData = JSON.parse(allData[month]);
+		        const { solde } = calculerSoldePrecedent(monthData);
+		        const monthCard = document.createElement('div');
+		        monthCard.classList.add('timeline-month');
+		        if (currentActiveMonth === month) {
+		            monthCard.classList.add('active');
+		        }
+		        monthCard.innerHTML = `
+		            <button class="delete-month-btn" onclick="supprimerMois('${month.replace(/'/g, "\\'")}'); event.stopPropagation();" title="Supprimer ce mois">
+		                <i class="fas fa-times"></i>
+		            </button>
+		            <div class="month-name">${month}</div>
+		            <div class="month-balance">${solde >= 0 ? '+' : ''}${solde.toFixed(2)} €</div>
+		        `;
+		        monthCard.onclick = () => {
+		            currentMonthInput.value = month;
+		            chargerTransactions();
+		        };
+				monthCard.ondblclick = () => {
+				    renommerMois(month);
+				};
+		        monthTimeline.appendChild(monthCard);
+		    });
+		}
+		function supprimerMois(monthName) {
+		    if (!confirm(`Êtes-vous sûr de vouloir supprimer DÉFINITIVEMENT le mois "${monthName}" et toutes ses transactions ?`)) {
+		        return;
+		    }
+    
+		    let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+		    delete allData[monthName];
+		    localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+    
+		    // Si on supprime le mois actuel, charger un autre mois
+		    if (currentMonthInput.value === monthName) {
+		        const remainingMonths = Object.keys(allData).sort(comparerMois);
+		        if (remainingMonths.length > 0) {
+		            currentMonthInput.value = remainingMonths[remainingMonths.length - 1];
+		            chargerTransactions();
+		        } else {
+		            // Plus aucun mois, créer un nouveau
+		            gererNouveauMois();
+		        }
+		    }
+    
+		    mettreAJourTimeline();
+		    showToast(`Mois "${monthName}" supprimé.`, 'success');
+		}
+		function renommerMois(oldName) {
+		    const newName = prompt(`Renommer le mois "${oldName}" :`, oldName);
+		    if (!newName || newName.trim() === '' || newName === oldName) {
+		        return;
+		    }
+    
+		    let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    
+		    // Vérifier si le nouveau nom existe déjà
+		    if (allData[newName]) {
+		        showModal(`Un mois nommé "${newName}" existe déjà.`, 'error');
+		        return;
+		    }
+    
+		    // ✅ Créer un nouvel objet en préservant l'ordre
+		    const newAllData = {};
+		    for (let key in allData) {
+		        if (key === oldName) {
+		            // Remplacer l'ancien nom par le nouveau à la même position
+		            newAllData[newName] = allData[oldName];
+		        } else {
+		            newAllData[key] = allData[key];
+		        }
+		    }
+    
+		    localStorage.setItem(STORAGE_KEY, JSON.stringify(newAllData));
+    
+		    // Mettre à jour si c'était le mois actuel
+		    if (currentMonthInput.value === oldName) {
+		        currentMonthInput.value = newName;
+		    }
+    
+		    chargerTransactions();
+		    mettreAJourTimeline();
+		    showToast(`Mois renommé en "${newName}".`, 'success');
+		}
 
         // --- GESTION DES CATÉGORIES ---
         let pendingTargetSelectId = null;
@@ -2141,21 +2282,46 @@
                 showModal("Veuillez entrer un nom pour le nouveau mois.", 'error');
                 return;
             }
-            currentMonthData = {
+            
+            // Vérifier si un mois avec ce nom existe déjà
+            let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            if (allData[monthName]) {
+                showModal(`Un mois nommé "${monthName}" existe déjà. Veuillez choisir un autre nom.`, 'error');
+                return;
+            }
+            
+            // Créer un NOUVEAU mois (sans toucher au mois actuel)
+            const newMonthData = {
                 transactions: [],
                 soldeOuverture: openingBalance,
                 budgets: {}
             };
+            
+            // Sauvegarder le nouveau mois IMMÉDIATEMENT
+            allData[monthName] = JSON.stringify(newMonthData);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+            localStorage.setItem(LAST_SAVE_KEY, new Date().toISOString());
+            
+            // Charger ce nouveau mois comme mois actuel
+            currentMonthData = newMonthData;
             transactions = currentMonthData.transactions;
             currentMonthInput.value = monthName;
             soldeOuvertureInput.value = openingBalance.toFixed(2);
+            
+            // Mettre à jour le sélecteur de mois AVANT de recharger
+            if (selectMonth) {
+                selectMonth.value = monthName;
+            }
+            
             genererChampsBudget();
             rechargerTableau();
-            let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            allData[monthName] = JSON.stringify(currentMonthData);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
-            chargerListeMois(monthName);
+            mettreAJourSoldeEtTotaux();
             mettreAJourTimeline();
+            
+            // Mettre à jour l'indicateur de position
+            const monthNames = Object.keys(allData).sort(comparerMois);
+            monthPositionIndicator.textContent = `${monthNames.length}/${monthNames.length} mois`;
+            
             showToast(`Nouvel onglet "${monthName}" créé avec succès !`, 'success');
             closeNewMonthModal();
         }
@@ -2270,6 +2436,7 @@
             chargerListeMois();
             chargerRecurrences();
             setupAutoSave();
+			mettreAJourTimeline();
 
 
             const lastSave = localStorage.getItem(LAST_SAVE_KEY);
