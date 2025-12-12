@@ -4,68 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚡ Ralph - Aide gratuite à la gestion des comptes</title>
-    
-    <link rel="icon" type="image/jpg" href="./images/ralphlogo.jpg"> 
+
+    <link rel="icon" type="image/jpg" href="./images/ralphlogo.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-    
-    <style>
-        /* --- DÉFINITION DES VARIABLES DE THÈME --- */
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@11.0.1/dist/css/shepherd.css">
 
-        /* Thème Foncé (Dark Mode - Défaut) */
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/shepherd.js@11.0.1/dist/js/shepherd.min.js"></script>
+
+    <style>
         :root {
-            --bg-color: #1A1A2E; 
-            --card-color: #2C2C40; 
+            --bg-color: #1A1A2E;
+            --card-color: #2C2C40;
             --text-color: #E0E0FF;
             --light-text-color: #A0A0C0;
             --border-color: #4A4A6A;
             --input-bg: #4A4A6A;
-            
+
             --neon-accent: #00FFFF;
             --neon-success: #00FF99;
             --neon-danger: #FF3366;
             --neon-warning: #FFDD44;
-            
+			--neon-choice: #F58E27;
+
             --shadow-glow: 0 0 10px rgba(0, 255, 255, 0.2);
             --shadow-deep: 0 4px 15px rgba(0, 0, 0, 0.5);
             --table-header-bg: #4A4A6A;
             --table-row-sep: #3B3B5B;
+            --border-radius: 10px;
         }
 
-        /* Thème Clair (Light Mode) */
         body.light-mode {
-            /* Fonds et Structure */
-            --bg-color: #F0F3F6;         
-            --card-color: #FFFFFF;       
-            --input-bg: #E9ECEF;         
-            --border-color: #DEE2E6;     
-            
-            /* Couleurs de Texte */
-            --text-color: #212529;        
-            --light-text-color: #6C757D;  
-            
-            /* Couleurs d'Accentuation et Statut */
-            --neon-accent: #007AFF;      
+            --bg-color: #F0F3F6;
+            --card-color: #FFFFFF;
+            --input-bg: #E9ECEF;
+            --border-color: #DEE2E6;
+            --text-color: #212529;
+            --light-text-color: #6C757D;
+            --neon-accent: #007AFF;
             --neon-success: #28A745;
             --neon-danger: #DC3545;
             --neon-warning: #FFC107;
-            
-            /* Ombres */
-            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.08); 
-            --shadow-deep: 0 8px 20px rgba(0, 0, 0, 0.15); 
-            
-            /* Tableau */
-            --table-header-bg: #007AFF;  
-            --table-row-sep: #E9ECEF; 
-        }
-        
-        /* --- STYLES GÉNÉRAUX ET COMMUNS --- */
-        
-        :root {
-            --border-radius: 10px;
+			--neon-choice: #F58E27;
+            --shadow-glow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-deep: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --table-header-bg: #007AFF;
+            --table-row-sep: #E9ECEF;
         }
 
         body {
@@ -86,9 +72,9 @@
             box-shadow: var(--shadow-deep);
             border-radius: var(--border-radius);
             transition: background-color 0.3s, box-shadow 0.3s;
+            position: relative;
         }
-        
-        /* Masquer/Afficher les écrans */
+
         .screen {
             display: none;
         }
@@ -96,37 +82,34 @@
             display: block;
         }
 
-
-        /* --- TITRES & SÉPARATEURS --- */
         h1, h2, h3 {
             color: var(--neon-accent);
-            padding-bottom: 10px; /* Réduit pour les h3 */
-            margin-bottom: 20px; /* Réduit pour les h3 */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 12px;
             font-weight: 600;
         }
-        h1 { 
-            font-size: 2.5em; 
+        h1 {
+            font-size: 2.5em;
             text-shadow: var(--neon-accent) 0 0 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
         }
-        h1 > div:first-child { 
-            padding-top: 10px; 
+        h1 > div:first-child {
+            padding-top: 10px;
         }
-
-        body.light-mode h1 { 
-            text-shadow: none; 
-            color: var(--text-color); 
+        body.light-mode h1 {
+            text-shadow: none;
+            color: var(--text-color);
         }
-        h2 { 
-            font-size: 1.8em; 
+        h2 {
+            font-size: 1.8em;
             justify-content: flex-start;
-            border-bottom: 1px solid var(--border-color); 
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 30px;
         }
         h3 {
@@ -135,17 +118,17 @@
             border-bottom: none;
             margin-top: 0;
         }
-        
+
         .app-logo {
-            width: 70px; 
-            height: 70px; 
+            width: 70px;
+            height: 70px;
             margin-right: 10px;
             border-radius: 50%;
             box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-            object-fit: cover; 
+            object-fit: cover;
         }
         body.light-mode .app-logo {
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .separator {
@@ -155,7 +138,6 @@
             margin: 40px 0;
         }
 
-        /* --- INPUTS & SELECTS --- */
         input[type="date"], input[type="text"], input[type="number"], input[type="password"], select {
             padding: 12px;
             border: 1px solid var(--border-color);
@@ -165,10 +147,36 @@
             font-family: 'Poppins', sans-serif;
             font-size: 1em;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            box-sizing: border-box; 
+            box-sizing: border-box;
         }
 
-        /* --- BOUTONS UNIFORMISÉS --- */
+        .select-plus-wrapper {
+            display:flex;
+            gap:8px;
+            align-items:center;
+        }
+        .select-plus-wrapper select {
+            flex:1;
+        }
+        .plus-cat-btn {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:36px;
+            height:36px;
+            border-radius:8px;
+            border:1px solid var(--border-color);
+            background:transparent;
+            color:var(--neon-accent);
+            cursor:pointer;
+            font-weight:700;
+        }
+        .plus-cat-btn:hover {
+            box-shadow:0 0 10px rgba(0,255,255,0.12);
+            background:var(--neon-accent);
+            color:var(--card-color);
+        }
+
         .app-btn {
             padding: 12px 20px;
             border: none;
@@ -180,31 +188,31 @@
             box-shadow: var(--shadow-deep);
             text-transform: uppercase;
         }
-        
-        .add-btn { 
+
+        .add-btn {
             background-color: var(--neon-success);
             color: var(--card-color);
         }
         .add-btn:hover { opacity: 0.9; box-shadow: 0 0 15px var(--neon-success); }
-        
-        .save-btn { 
+
+        .save-btn {
             background-color: var(--neon-accent);
             color: var(--card-color);
         }
         .save-btn:hover { opacity: 0.9; box-shadow: 0 0 15px var(--neon-accent); }
 
-        .delete-btn { 
+        .delete-btn {
             background-color: var(--neon-danger);
             color: white;
-            padding: 8px 15px; 
+            padding: 8px 15px;
             font-size: 0.9em;
             box-shadow: none;
             text-transform: none;
         }
         .delete-btn:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(255, 51, 102, 0.5); }
-        
+
         .compact-switch-btn {
-            background-color: transparent; 
+            background-color: transparent;
             color: var(--neon-accent);
             box-shadow: none;
             padding: 5px 10px;
@@ -220,11 +228,9 @@
         body.light-mode .compact-switch-btn:hover {
             box-shadow: none;
             background-color: var(--neon-accent);
-            color: white; 
+            color: white;
         }
 
-        /* --- FORMULAIRES DE TABLEAU DE BORD (Mise en page) --- */
-        
         #transaction-form, #recurrence-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -234,25 +240,24 @@
             margin-bottom: 20px;
             background-color: var(--input-bg);
         }
-        body.light-mode #transaction-form, 
+        body.light-mode #transaction-form,
         body.light-mode #recurrence-form {
-            background-color: var(--card-color); 
+            background-color: var(--card-color);
             border: 1px solid var(--border-color);
         }
-        
+
         #transaction-form input, #transaction-form select,
         #recurrence-form input, #recurrence-form select {
             width: 100%;
-            background-color: var(--card-color); 
+            background-color: var(--card-color);
         }
-        body.light-mode #transaction-form input, 
+        body.light-mode #transaction-form input,
         body.light-mode #transaction-form select,
-        body.light-mode #recurrence-form input, 
+        body.light-mode #recurrence-form input,
         body.light-mode #recurrence-form select {
-            background-color: var(--input-bg); 
+            background-color: var(--input-bg);
         }
-        
-        /* Gestion des Onglets (Mois) */
+
         .gestion-onglets {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -265,14 +270,13 @@
         body.light-mode .gestion-onglets {
             background-color: var(--card-color);
         }
-        
-        /* Budgets */
+
         #budget-form {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: flex-start;
-            margin-bottom: 20px; /* Espace avant le bouton de sauvegarde */
+            margin-bottom: 20px;
         }
         #budget-form > div {
             flex: 1 1 200px;
@@ -282,13 +286,12 @@
             max-width: none !important;
         }
 
-        /* --- TABLEAU --- */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             border-radius: var(--border-radius);
-            overflow: hidden; 
+            overflow: hidden;
             box-shadow: var(--shadow-glow);
         }
         th, td {
@@ -296,42 +299,41 @@
             text-align: left;
             border-bottom: 1px solid var(--table-row-sep);
         }
-        th { 
-            background-color: var(--table-header-bg); 
-            color: var(--text-color); 
+        th {
+            background-color: var(--table-header-bg);
+            color: var(--text-color);
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.9em;
         }
-        body.light-mode th { 
-            color: white; 
+        body.light-mode th {
+            color: white;
         }
-        
+
         .revenue-row { background-color: rgba(0, 255, 153, 0.1); color: var(--neon-success); }
         .expense-row { background-color: rgba(255, 51, 102, 0.1); color: var(--neon-danger); }
-        
-        /* Ajustements couleurs des lignes en Light Mode */
-        body.light-mode .revenue-row { 
-            background-color: #E6F7EF; 
-            color: var(--neon-success); 
+
+        body.light-mode .revenue-row {
+            background-color: #E6F7EF;
+            color: var(--neon-success);
         }
-        body.light-mode .expense-row { 
-            background-color: #FEEEEE; 
-            color: var(--neon-danger); 
+        body.light-mode .expense-row {
+            background-color: #FEEEEE;
+            color: var(--neon-danger);
         }
-        
-        #transaction-list td:nth-child(6), 
-        #recurrence-list td:nth-child(2) { 
+
+        #transaction-list td:nth-child(6),
+        #recurrence-list td:nth-child(2) {
             font-weight: 600;
-            text-align: right; 
+            text-align: right;
         }
-        #transaction-list th:nth-child(6), 
+        #transaction-list th:nth-child(6),
         #recurrence-list th:nth-child(2) {
-             text-align: right; 
+             text-align: right;
         }
-        
+
         td:last-child {
-            width: 100px; 
+            width: 100px;
             text-align: center;
         }
         td:last-child button {
@@ -339,8 +341,6 @@
             font-size: 0.8em;
         }
 
-
-        /* --- ANALYSES & SOLDE --- */
         .analysis-grid {
             display: flex;
             flex-wrap: wrap;
@@ -348,7 +348,7 @@
             margin-bottom: 40px;
         }
         .chart-container {
-            flex: 1 1 450px; /* Assure que les conteneurs prennent de la place */
+            flex: 1 1 450px;
             padding: 20px;
             border-radius: var(--border-radius);
             background-color: var(--input-bg);
@@ -356,11 +356,10 @@
         }
         body.light-mode .chart-container {
             background-color: var(--card-color);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-color);
         }
-        
-        /* Style du grand Solde sur la page Analyse */
+
         #solde-analysis {
             display: inline-block;
             padding: 15px 30px;
@@ -380,22 +379,21 @@
             color: var(--card-color);
             box-shadow: 0 0 20px var(--neon-danger);
         }
-        
-        /* --- NOUVEAU STYLE POUR LE SOLDE PERSISTANT --- */
+
         #persistent-balance {
-            display: flex; 
+            display: flex;
             align-items: center;
             gap: 10px;
             padding: 8px 15px;
             border-radius: var(--border-radius);
-            font-size: 1.1em; 
+            font-size: 1.1em;
             font-weight: 500;
-            background-color: var(--input-bg); 
+            background-color: var(--input-bg);
             box-shadow: var(--shadow-deep);
             max-width: fit-content;
-            margin-bottom: 20px; 
-            float: right; 
-            clear: right; 
+            margin-bottom: 20px;
+            float: right;
+            clear: right;
         }
         body.light-mode #persistent-balance {
             background-color: var(--card-color);
@@ -404,7 +402,7 @@
         #persistent-balance .balance-amount {
             padding: 4px 10px;
             border-radius: 6px;
-            color: var(--card-color); 
+            color: var(--card-color);
             font-weight: 700;
             font-size: 1.1em;
         }
@@ -415,8 +413,6 @@
             background-color: var(--neon-danger);
         }
 
-
-        /* Style des cartes de suivi budgétaire */
         #budget-section {
             display: flex;
             flex-direction: column;
@@ -465,8 +461,7 @@
             color: var(--light-text-color);
             margin: 0;
         }
-        
-        /* --- NOUVEAUX STYLES POUR LA NAVIGATION PRINCIPALE --- */
+
         #main-nav {
             display: flex;
             flex-wrap: wrap;
@@ -485,7 +480,7 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: none;
-            text-transform: none; 
+            text-transform: none;
             font-size: 0.95em;
             display: flex;
             align-items: center;
@@ -502,73 +497,71 @@
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
         }
         body.light-mode .nav-btn.active {
-            color: white; 
+            color: white;
             box-shadow: 0 4px 8px rgba(0, 122, 255, 0.2);
         }
 
-        /* --- STYLE DU SWITCHER DE THÈME --- */
-        #theme-switcher { 
-            position: absolute; 
-            top: 40px; 
-            right: 40px; 
-            z-index: 1000; 
+        #theme-switcher {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            z-index: 1000;
             display: flex;
             align-items: center;
-            gap: 10px; 
+            gap: 10px;
             font-weight: 600;
         }
-        
+
         .theme-label {
             transition: color 0.3s;
             font-size: 0.9em;
-            color: var(--light-text-color); 
+            color: var(--light-text-color);
         }
 
         body:not(.light-mode) #dark-label {
-            color: var(--neon-accent); 
+            color: var(--neon-accent);
         }
         body.light-mode #light-label {
-            color: var(--neon-accent); 
+            color: var(--neon-accent);
         }
 
-        .theme-switch { 
-            width: 50px; 
-            height: 25px; 
-            background: var(--card-color); 
-            border-radius: 25px; 
-            border: 1px solid var(--border-color); 
-            position: relative; 
-            cursor: pointer; 
-            transition: background 0.3s; 
+        .theme-switch {
+            width: 50px;
+            height: 25px;
+            background: var(--card-color);
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
         }
         .theme-switch::before {
-            content: "\f186"; 
-            font-family: "Font Awesome 6 Free"; 
-            font-weight: 900; 
-            position: absolute; 
-            top: 2px; 
-            left: 2px; 
-            width: 20px; 
-            height: 20px; 
-            background-color: var(--neon-accent); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 14px; 
-            color: var(--card-color); 
-            transition: transform 0.3s, background-color 0.3s, content 0.3s; 
+            content: "\f186";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--neon-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--card-color);
+            transition: transform 0.3s, background-color 0.3s, content 0.3s;
             box-shadow: 0 0 5px var(--neon-accent);
         }
         body.light-mode .theme-switch::before {
-            content: "\f185"; 
-            transform: translateX(25px); 
-            background-color: var(--neon-warning); 
-            color: white; 
+            content: "\f185";
+            transform: translateX(25px);
+            background-color: var(--neon-warning);
+            color: white;
             box-shadow: 0 0 5px var(--neon-warning);
         }
-        
-        /* --- NOUVEAUX STYLES POUR IMPORT/EXPORT (Transfer Page) --- */
+
         .transfer-section {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -599,16 +592,14 @@
             padding: 10px 15px;
         }
         .export-btn:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
-        
-        
-        /* --- MODALE DE NOTIFICATION --- */
+
         #notification-modal {
-            display: none; 
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 2000; 
+            z-index: 2000;
             padding: 20px 30px;
             border-radius: var(--border-radius);
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0,0,0,0.8);
@@ -631,21 +622,277 @@
         .modal-success i { color: var(--neon-success); }
         .modal-error i { color: var(--neon-danger); }
         .modal-info i { color: var(--neon-accent); }
-        
+
         body.light-mode #notification-modal {
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         #notification-modal p {
             font-size: 1.1em;
             margin: 0;
         }
 
         #copyright-footer {
-            text-align: center; 
-            color: var(--light-text-color); 
+            text-align: center;
+            color: var(--light-text-color);
             margin-top: 50px;
             font-size: 0.9em;
+        }
+
+        #category-modal {
+            display:none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 3000;
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-deep);
+            min-width: 320px;
+        }
+        #category-modal.active { display:block; }
+        #category-modal h4 { margin:0 0 8px 0; color:var(--neon-accent); }
+        #category-modal label { font-size:0.9em; color:var(--light-text-color); display:block; margin-top:8px;}
+        #category-modal input, #category-modal select { width:100%; margin-top:6px; padding:8px; box-sizing:border-box;}
+        #category-modal .actions { display:flex; gap:8px; margin-top:12px; justify-content:flex-end;}
+        #category-modal .small-help { font-size:0.85em; color:var(--light-text-color); margin-top:6px; }
+
+        /* --- NOUVEAUX STYLES POUR LA NAVIGATION AMÉLIORÉE --- */
+        .month-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background-color: var(--input-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .nav-arrow {
+            background: var(--neon-accent);
+            color: var(--card-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .nav-arrow:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px var(--neon-accent);
+        }
+        .current-month-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--neon-accent);
+            min-width: 200px;
+            justify-content: center;
+        }
+        #month-position-indicator {
+            font-size: 0.7em;
+            color: var(--light-text-color);
+            margin-left: 5px;
+        }
+        .new-month-btn {
+            background: var(--neon-accent);
+            color: var(--card-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+        .new-month-btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 10px var(--neon-accent);
+        }
+
+        /* Timeline des mois */
+        .month-timeline {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .timeline-month {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+        .timeline-month:hover {
+            border-color: var(--neon-accent);
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+        }
+        .timeline-month.active {
+            background-color: var(--neon-accent);
+            color: var(--card-color);
+            border-color: var(--neon-accent);
+            box-shadow: 0 0 10px var(--neon-accent);
+        }
+        .timeline-month .month-name {
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        .timeline-month .month-balance {
+            font-size: 0.8em;
+            color: var(--light-text-color);
+        }
+        .timeline-month.active .month-balance {
+            color: var(--card-color);
+        }
+
+        /* Modale de création de mois */
+        #new-month-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-deep);
+            background-color: var(--card-color);
+            text-align: center;
+            border: 2px solid var(--neon-accent);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            max-width: 90%;
+            width: 400px;
+        }
+        #new-month-modal.active {
+            display: block;
+            opacity: 1;
+        }
+        #new-month-modal h3 {
+            color: var(--neon-accent);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        #new-month-modal label {
+            display: block;
+            margin: 15px 0 5px;
+            text-align: left;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        #new-month-modal input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .modal-help {
+            font-size: 0.9em;
+            color: var(--light-text-color);
+            margin: 10px 0;
+            text-align: left;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Bouton flottant de sauvegarde */
+        .fab-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--neon-success);
+            color: var(--card-color);
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 255, 153, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            z-index: 1000;
+            transition: all 0.2s;
+        }
+        .fab-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 153, 0.7);
+        }
+        .fab-tooltip {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            background: var(--card-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            box-shadow: var(--shadow-deep);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .fab-btn:hover + .fab-tooltip {
+            opacity: 1;
+        }
+
+        /* Notification toast (en haut) */
+        #toast-notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--card-color);
+            color: var(--text-color);
+            box-shadow: var(--shadow-deep);
+            border-left: 4px solid var(--neon-success);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(-20px);
+            max-width: 350px;
+        }
+        #toast-notification.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #toast-notification.success {
+            border-left-color: var(--neon-success);
+        }
+        #toast-notification.error {
+            border-left-color: var(--neon-danger);
+        }
+        #toast-notification.info {
+            border-left-color: var(--neon-accent);
         }
 
         /* --- RESPONSIVE --- */
@@ -659,18 +906,24 @@
             #transaction-form .add-btn, #recurrence-form .add-btn {
                 grid-column: span 2;
             }
+            .month-navigation {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .current-month-display {
+                justify-content: center;
+            }
         }
         @media (max-width: 600px) {
             body { padding: 20px 10px; }
             .container { padding: 20px; }
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
-            .compact-switch-btn { margin-left: 10px; } 
+            .compact-switch-btn { margin-left: 10px; }
             .nav-btn {
                 flex-grow: 1;
                 justify-content: center;
             }
-
             #transaction-form, #recurrence-form {
                 grid-template-columns: 1fr;
             }
@@ -684,13 +937,13 @@
             .gestion-onglets input, .gestion-onglets select {
                 max-width: none;
             }
-            table th, table td { padding: 8px 10px; font-size: 0.85em; } 
+            table th, table td { padding: 8px 10px; font-size: 0.85em; }
             .transfer-section {
                 flex-direction: column;
                 align-items: stretch;
             }
             #theme-switcher {
-                right: 20px; 
+                right: 20px;
                 top: 20px;
             }
             #persistent-balance {
@@ -699,20 +952,57 @@
                 justify-content: center;
                 margin-top: 10px;
             }
+            .month-timeline {
+                justify-content: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-    
+
     <div id="theme-switcher">
         <span id="dark-label" class="theme-label">Dark</span>
         <div class="theme-switch" onclick="toggleTheme()"></div>
         <span id="light-label" class="theme-label">Light</span>
     </div>
-    
+
+
+    <div id="category-modal" role="dialog" aria-hidden="true">
+        <h4><i class="fas fa-plus-circle"></i> Ajouter une catégorie</h4>
+        <label for="new-category-name">Nom de la catégorie</label>
+        <input type="text" id="new-category-name" placeholder="Ex : Restaurant">
+        <label for="new-category-type">Type</label>
+        <select id="new-category-type">
+            <option value="depense">Dépense</option>
+            <option value="revenu">Revenu</option>
+        </select>
+        <div class="small-help">La catégorie sera disponible partout (transactions, récurrences, budgets, graphiques).</div>
+        <div class="actions">
+            <button class="app-btn delete-btn" onclick="closeCategoryModal()">Annuler</button>
+            <button class="app-btn save-btn" id="confirm-add-category">Ajouter</button>
+        </div>
+    </div>
+
+    <div id="new-month-modal">
+        <h3><i class="fas fa-calendar-plus"></i> Créer un nouvel onglet</h3>
+        <label for="new-month-name">Nom du mois</label>
+        <input type="text" id="new-month-name" required>
+        <label for="new-month-opening-balance">Solde de départ (€)</label>
+        <input type="number" id="new-month-opening-balance" step="0.01" required>
+        <p class="modal-help" id="new-month-help-text">Ce solde correspond au solde de clôture du mois précédent.</p>
+        <div class="modal-actions">
+            <button class="app-btn delete-btn" onclick="closeNewMonthModal()">Annuler</button>
+            <button class="app-btn save-btn" onclick="createNewMonthFromModal()">Créer</button>
+        </div>
+    </div>
+
     <div id="notification-modal" class="modal-info">
         <i id="modal-icon" class="fas fa-info-circle"></i>
         <p id="modal-message">Ceci est un message de notification.</p>
+    </div>
+
+    <div id="toast-notification" class="success">
+        <p id="toast-message">Modifications sauvegardées !</p>
     </div>
 
     <div class="container">
@@ -730,8 +1020,8 @@
             Solde Actuel:
             <span id="solde-value-persistent" class="balance-amount positif">0.00 €</span>
         </div>
-        <div style="clear:both;"></div> 
-        
+        <div style="clear:both;"></div>
+
         <nav id="main-nav">
             <button class="nav-btn active" data-screen="dashboard-screen"><i class="fas fa-tachometer-alt"></i> Tableau de Bord</button>
             <button class="nav-btn" data-screen="analysis-screen"><i class="fas fa-chart-line"></i> Analyse</button>
@@ -739,53 +1029,48 @@
             <button class="nav-btn" data-screen="transfer-page"><i class="fas fa-exchange-alt"></i> Transfert & Sauvegarde</button>
         </nav>
 
-        
+        <!-- NOUVELLE BARRE DE NAVIGATION MOIS -->
+        <div class="month-navigation">
+            <button class="nav-arrow" onclick="naviguerMois(-1)" title="Mois Précédent">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="current-month-display">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="current-month-display">Janvier 2026</span>
+                <small id="month-position-indicator">1/1 mois</small>
+            </div>
+            <button class="nav-arrow" onclick="naviguerMois(1)" title="Mois Suivant">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="new-month-btn" onclick="openNewMonthModal()">
+                <i class="fas fa-plus-circle"></i> Nouveau Mois
+            </button>
+        </div>
+        <div class="month-timeline" id="month-timeline">
+            <!-- Généré dynamiquement -->
+        </div>
+
         <div id="dashboard-screen" class="screen active">
             
-            <h2><i class="fas fa-folder-open"></i> Gestion des Onglets / Mois</h2>
-            <div class="gestion-onglets">
-                <div id="solde-ouverture-container">
-                    <label for="solde-ouverture">Solde de Départ (€):</label>
-                    <input type="number" id="solde-ouverture" value="0.00" min="0" step="0.01" onchange="sauvegarderTransactions(false)">
-                    <span style="font-size: 0.8em; color: var(--light-text-color);"> (Solde du mois précédent)</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        
-                    <label for="select-month" style="white-space: nowrap;">Onglet Actuel :</label>
-
-                    <button onclick="naviguerMois(-1)" class="app-btn compact-switch-btn" title="Mois Précédent" style="flex: 0 0 auto;"><i class="fas fa-chevron-left"></i></button>
-
-                    <select id="select-month" onchange="chargerTransactions()" style="flex-grow: 1; min-width: 150px;"></select>
-                    
-                    <button onclick="naviguerMois(1)" class="app-btn compact-switch-btn" title="Mois Suivant" style="flex: 0 0 auto;"><i class="fas fa-chevron-right"></i></button>
-                    
-                    <input type="text" id="current-month" value="Janvier 2026" required style="flex-grow: 1; min-width: 150px;">
-                    <button onclick="sauvegarderTransactions()" class="app-btn save-btn" style="flex: 1 1 100px;"><i class="fas fa-save"></i> Sauvegarder</button>
-                    <button onclick="supprimerMoisSelectionne()" class="app-btn delete-btn" style="flex: 1 1 100px;"><i class="fas fa-trash-alt"></i> Supprimer l'onglet</button>
-
-                </div>
-            </div>
 
             <hr class="separator">
-            
-            <h2><i class="fas fa-plus-circle"></i> Ajouter une Transaction (Ponctuelle)</h2>
+
+            <h2><i class="fas fa-plus-circle"></i> Ajouter une Transaction </h2>
             <form id="transaction-form">
                 <input type="date" id="date" required value="2026-01-01">
                 <input type="text" id="description" placeholder="Description (ex: Cadeau, Courses)" required>
                 <input type="number" id="montant" placeholder="Montant" required min="0" step="0.01">
                 <select type="select" id="type">
                     <option value="revenu">Revenu</option>
-                    <option value="depense">Dépense</option>
+                    <option value="depense" selected>Dépense</option>
                 </select>
-                <select id="categorie" required>
-                    </select>
-                <select id="compte" required>
-                    </select>
+                <select id="categorie" required></select>
+                <select id="compte" required></select>
                 <button type="submit" class="app-btn add-btn" style="grid-column: span 1;"><i class="fas fa-plus"></i> Ajouter</button>
             </form>
 
             <hr class="separator">
-            
+
             <h2><i class="fas fa-list-alt"></i> Historique des Transactions (<span id="current-tab-name" style="color:var(--neon-success);">Janvier 2026</span>)</h2>
             <table>
                 <thead>
@@ -799,38 +1084,29 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="transaction-list">
-                    </tbody>
+                <tbody id="transaction-list"></tbody>
             </table>
-            
         </div>
 
-        
         <div id="analysis-screen" class="screen">
-            
             <h2><i class="fas fa-money-check-alt"></i> Solde Actuel (<span id="analysis-tab-name" style="color:var(--neon-accent);">Janvier 2026</span>)</h2>
             <div id="solde-analysis" class="positif" style="margin-bottom: 40px;">0.00 €</div>
-            
-            <h2><i class="fas fa-chart-pie"></i> Suivi & Répartition des Dépenses</h2>
 
+            <h2><i class="fas fa-chart-pie"></i> Suivi & Répartition des Dépenses</h2>
             <div class="analysis-grid">
                  <div class="chart-container" style="flex: 1 1 450px;">
                     <h3><i class="fas fa-edit"></i> Définir vos Budgets mensuels</h3>
                     <p style="color: var(--light-text-color); margin-bottom: 15px;">Entrez la limite de dépenses souhaitée par catégorie pour ce mois.</p>
-                    <form id="budget-form">
-                    </form>
+                    <form id="budget-form"></form>
                     <button onclick="sauvegarderTransactions()" class="app-btn save-btn" style="margin-top: 5px;"><i class="fas fa-sync"></i> Mettre à jour les Budgets</button>
                 </div>
-                
                 <div class="chart-container" style="flex: 1 1 450px;">
                     <h3><i class="fas fa-list-alt"></i> Consommation Actuelle</h3>
-                    <div id="budget-section">
-                    </div>
+                    <div id="budget-section"></div>
                 </div>
             </div>
 
             <hr class="separator">
-            
             <div class="analysis-grid">
                 <div class="chart-container" style="flex: 1 1 450px;">
                     <h3><i class="fas fa-chart-pie"></i> Répartition des Dépenses par Catégorie</h3>
@@ -838,7 +1114,6 @@
                         <canvas id="expense-pie-chart"></canvas>
                     </div>
                 </div>
-                
                 <div class="chart-container" style="flex: 1 1 450px;">
                     <h3><i class="fas fa-chart-bar"></i> Solde Historique des Mois</h3>
                     <p style="color: var(--light-text-color);">Affiche l'évolution du solde de clôture entre tous les mois enregistrés.</p>
@@ -846,17 +1121,12 @@
                         <canvas id="balance-history-chart"></canvas>
                     </div>
                 </div>
-                </div>
-            
+            </div>
         </div>
 
-
         <div id="recurrence-page" class="screen">
-            
             <h2><i class="fas fa-sync-alt"></i> Récurrences & Abonnements (Liste Maître)</h2>
-            
             <p style="color: var(--light-text-color); margin-bottom: 20px;">Définissez ici vos transactions automatiques ou abonnements (loyer, salaires, etc.).</p>
-
             <h3><i class="fas fa-plus"></i> Définir une Nouvelle Récurrence</h3>
             <form id="recurrence-form">
                 <input type="text" id="r-description" placeholder="Nom de l'abonnement" required>
@@ -865,10 +1135,8 @@
                     <option value="depense">Dépense (Abonnement)</option>
                     <option value="revenu">Revenu (Salaire)</option>
                 </select>
-                <select id="r-categorie" required>
-                    </select>
-                <select id="r-compte" required>
-                    </select>
+                <select id="r-categorie" required></select>
+                <select id="r-compte" required></select>
                 <select id="r-frequence" required>
                     <option value="mensuel">Mensuel</option>
                     <option value="annuel">Annuel</option>
@@ -879,7 +1147,6 @@
             </form>
 
             <hr class="separator">
-
             <h2><i class="fas fa-list"></i> Liste des Récurrences Actives</h2>
             <table>
                 <thead>
@@ -894,109 +1161,134 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="recurrence-list">
-                    </tbody>
+                <tbody id="recurrence-list"></tbody>
             </table>
-            
             <button onclick="chargerRecurrencesDansMoisActuel()" class="app-btn save-btn" style="margin-top: 30px;"><i class="fas fa-cloud-download-alt"></i> Charger les Récurrences dans l'Onglet Actuel</button>
-            
         </div>
 
-
         <div id="transfer-page" class="screen">
-            
             <h2><i class="fas fa-file-export"></i> Exporter les données (CSV)</h2>
             <p style="color: var(--light-text-color);">Exporte les transactions de l'onglet actuel ( <span id="export-tab-name" style="color:var(--neon-accent);">Janvier 2026</span> ) dans un fichier CSV.</p>
             <button onclick="exportToCSV()" class="app-btn export-btn"><i class="fas fa-download"></i> Exporter les Transactions (CSV)</button>
 
             <hr class="separator">
-
             <h2><i class="fas fa-file-import"></i> Importer des données (CSV)</h2>
             <div class="transfer-section" style="flex-direction: column; align-items: flex-start;">
                 <input type="file" id="csv-file" accept=".csv" onchange="importFromCSV(event)" style="display: none;">
-                
-                <button onclick="document.getElementById('csv-file').click()" 
-                        class="app-btn export-btn">
+                <button onclick="document.getElementById('csv-file').click()" class="app-btn export-btn">
                     <i class="fas fa-upload"></i> Importer les Transactions (CSV)
                 </button>
-                
                 <span style="font-size: 0.9em; color: var(--neon-warning);">⚠️ L'importation remplace **toutes** les transactions actuelles de l'onglet actif.</span>
             </div>
-            
         </div>
-        
     </div>
+
+    <button id="floating-save-btn" class="fab-btn" onclick="sauvegarderTransactions()">
+        <i class="fas fa-save"></i>
+    </button>
+    <div class="fab-tooltip">Sauvegarder (Ctrl+S)</div>
 
     <p id="copyright-footer">
         &copy; 2026 DECHANDON Martin. Tous droits réservés.
     </p>
 
-
     <script>
         // --- CONFIGURATION GLOBALE ---
-        const STORAGE_KEY = 'comptes_dashboard_data'; 
-        const RECURRENCE_KEY = 'ralph_recurrence_master_list'; 
+        const STORAGE_KEY = 'comptes_dashboard_data';
+        const RECURRENCE_KEY = 'ralph_recurrence_master_list';
         const THEME_KEY = 'budget_theme_preference';
-        
+        const CATEGORY_STORAGE_KEY = 'ralph_categories';
+        const LAST_SAVE_KEY = 'ralph_last_save_time';
+
         let currentMonthData = {
             transactions: [],
             soldeOuverture: 0,
             budgets: {}
         };
-        let transactions = currentMonthData.transactions; 
-        let recurrences = []; 
+        let transactions = currentMonthData.transactions;
+        let recurrences = [];
         let chartInstance;
-        let historyChartInstance; // AJOUTÉ : Instance pour le graphique historique
-        
-        const CATEGORIES = {
+        let historyChartInstance;
+        let autoSaveInterval;
+        let tour;
+
+        // Défauts initiaux
+        const DEFAULT_CATEGORIES = {
             revenu: ["Salaire", "Vente", "Cadeau", "Investissement", "Autres Revenus"],
             depense: ["Logement", "Alimentation", "Transport", "Loisirs", "Santé", "Abonnements", "Épargne", "Autres Dépenses"]
         };
+
         const COMPTES = ["Courant Principal", "Courant Secondaire", "Épargne", "Cash"];
 
         // Références aux éléments HTML
         const body = document.body;
-        const navButtons = document.querySelectorAll('.nav-btn'); 
+        const navButtons = document.querySelectorAll('.nav-btn');
         const form = document.getElementById('transaction-form');
         const transactionList = document.getElementById('transaction-list');
-        
-        const soldeAnalysisDiv = document.getElementById('solde-analysis'); // Solde page Analyse
-        const soldeValuePersistent = document.getElementById('solde-value-persistent'); // NOUVEAU: Solde persistant
-        const analysisTabName = document.getElementById('analysis-tab-name'); 
-        const exportTabName = document.getElementById('export-tab-name'); 
-        
+        const soldeAnalysisDiv = document.getElementById('solde-analysis');
+        const soldeValuePersistent = document.getElementById('solde-value-persistent');
+        const analysisTabName = document.getElementById('analysis-tab-name');
+        const exportTabName = document.getElementById('export-tab-name');
         const currentMonthInput = document.getElementById('current-month');
+        const currentMonthDisplay = document.getElementById('current-month-display');
+        const monthPositionIndicator = document.getElementById('month-position-indicator');
         const selectMonth = document.getElementById('select-month');
         const currentTabName = document.getElementById('current-tab-name');
         const soldeOuvertureInput = document.getElementById('solde-ouverture');
         const budgetForm = document.getElementById('budget-form');
         const budgetSection = document.getElementById('budget-section');
-        
-        const selectCategorie = document.getElementById('categorie'); 
-        const selectCompte = document.getElementById('compte'); 
-        const typeSelect = document.getElementById('type'); 
-        
-        // Nouveaux éléments pour les récurrences
+        const selectCategorie = document.getElementById('categorie');
+        const selectCompte = document.getElementById('compte');
+        const typeSelect = document.getElementById('type');
         const recurrenceForm = document.getElementById('recurrence-form');
         const recurrenceListBody = document.getElementById('recurrence-list');
         const rSelectCategorie = document.getElementById('r-categorie');
         const rSelectCompte = document.getElementById('r-compte');
         const rSelectType = document.getElementById('r-type');
-        
-        // Éléments de la Modale
+        const categoryModal = document.getElementById('category-modal');
+        const newCategoryNameInput = document.getElementById('new-category-name');
+        const newCategoryTypeSelect = document.getElementById('new-category-type');
+        const confirmAddCategoryBtn = document.getElementById('confirm-add-category');
         const notificationModal = document.getElementById('notification-modal');
         const modalMessage = document.getElementById('modal-message');
         const modalIcon = document.getElementById('modal-icon');
-        
-        
+        const newMonthModal = document.getElementById('new-month-modal');
+        const newMonthNameInput = document.getElementById('new-month-name');
+        const newMonthOpeningBalanceInput = document.getElementById('new-month-opening-balance');
+        const newMonthHelpText = document.getElementById('new-month-help-text');
+        const monthTimeline = document.getElementById('month-timeline');
+        const toastNotification = document.getElementById('toast-notification');
+        const toastMessage = document.getElementById('toast-message');
+        const floatingSaveBtn = document.getElementById('floating-save-btn');
+
+        // Chargement/initialisation des catégories
+        function loadCategoriesFromStorage() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(CATEGORY_STORAGE_KEY));
+                if (saved && typeof saved === 'object') {
+                    saved.revenu = Array.isArray(saved.revenu) ? saved.revenu : [];
+                    saved.depense = Array.isArray(saved.depense) ? saved.depense : [];
+                    if (saved.revenu.length === 0) saved.revenu = DEFAULT_CATEGORIES.revenu.slice();
+                    if (saved.depense.length === 0) saved.depense = DEFAULT_CATEGORIES.depense.slice();
+                    return saved;
+                }
+            } catch(e) {
+                console.warn('Erreur lecture categories:', e);
+            }
+            return { revenu: DEFAULT_CATEGORIES.revenu.slice(), depense: DEFAULT_CATEGORIES.depense.slice() };
+        }
+
+        function saveCategoriesToStorage(catObj) {
+            localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(catObj));
+        }
+
+        let CATEGORIES = loadCategoriesFromStorage();
+
         // --- GESTION DE LA MODALE ---
         function showModal(message, type = 'info', duration = 3000) {
             modalMessage.textContent = message;
-            
             notificationModal.classList.remove('modal-info', 'modal-success', 'modal-error');
-            
             let iconClass = 'fas fa-info-circle';
-            
             if (type === 'success') {
                 notificationModal.classList.add('modal-success');
                 iconClass = 'fas fa-check-circle';
@@ -1007,26 +1299,29 @@
                 notificationModal.classList.add('modal-info');
                 iconClass = 'fas fa-info-circle';
             }
-            
             modalIcon.className = iconClass;
-            
             notificationModal.classList.add('active');
-
-            // Cacher automatiquement la modale après 'duration'
             setTimeout(() => {
                 notificationModal.classList.remove('active');
             }, duration);
         }
 
-        // --- GESTION DES ÉCRANS (MISE À JOUR) ---
-        
+        function showToast(message, type = 'success', duration = 3000) {
+            toastMessage.textContent = message;
+            toastNotification.classList.remove('success', 'error', 'info');
+            toastNotification.classList.add(type);
+            toastNotification.classList.add('active');
+            setTimeout(() => {
+                toastNotification.classList.remove('active');
+            }, duration);
+        }
+
+        // --- GESTION DES ÉCRANS ---
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
             document.getElementById(screenId).classList.add('active');
-            
-            // Gérer l'état actif des boutons de navigation
             navButtons.forEach(btn => {
                 if (btn.getAttribute('data-screen') === screenId) {
                     btn.classList.add('active');
@@ -1034,44 +1329,37 @@
                     btn.classList.remove('active');
                 }
             });
-
-            // Actions spécifiques à l'écran
             if (screenId === 'recurrence-page') {
                 chargerRecurrences();
             }
             if (screenId === 'analysis-screen') {
                 mettreAJourSoldeEtTotaux();
                 mettreAJourGraphique();
-                mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique
-                mettreAJourSuiviBudget(); // S'assurer que le suivi budgétaire est mis à jour
-                genererChampsBudget(); // S'assurer que les champs de budget sont chargés
+                mettreAJourGraphiqueHistorique();
+                mettreAJourSuiviBudget();
+                genererChampsBudget();
             }
             if (screenId === 'transfer-page') {
-                 // Mise à jour du nom de l'onglet dans la page de transfert
                 exportTabName.textContent = currentMonthInput.value;
             }
-            // Si on retourne au Dashboard, on recharge les totaux
             if (screenId === 'dashboard-screen') {
                 rechargerTableau();
             }
         }
-        
-        // Ajouter l'écouteur d'événements pour les boutons de navigation
+
         navButtons.forEach(button => {
             button.addEventListener('click', function() {
                 showScreen(this.getAttribute('data-screen'));
             });
         });
 
-
         // --- GESTION DU THÈME ---
-        
         function toggleTheme() {
             body.classList.toggle('light-mode');
             const isLight = body.classList.contains('light-mode');
             localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
             mettreAJourGraphique();
-            mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique
+            mettreAJourGraphiqueHistorique();
         }
 
         function loadThemePreference() {
@@ -1084,52 +1372,44 @@
         }
 
         // --- GESTION DES RÉCURRENCES ---
-        
         function sauvegarderRecurrences() {
             localStorage.setItem(RECURRENCE_KEY, JSON.stringify(recurrences));
             rechargerRecurrences();
             showModal("Liste des récurrences mise à jour.", 'success');
         }
-        
+
         function chargerRecurrences() {
             const savedRecurrences = localStorage.getItem(RECURRENCE_KEY);
             recurrences = savedRecurrences ? JSON.parse(savedRecurrences) : [];
             rechargerRecurrences();
         }
-        
+
         function rechargerRecurrences() {
             recurrenceListBody.innerHTML = '';
-            
             recurrences.forEach((r, index) => {
                 const row = recurrenceListBody.insertRow();
-                
                 row.classList.add(r.type === 'revenu' ? 'revenue-row' : 'expense-row');
-
                 row.insertCell(0).textContent = r.description;
-                
-                const montantFormatte = r.type === 'revenu' ? 
-                                        '+' + r.montant.toFixed(2) : 
+                const montantFormatte = r.type === 'revenu' ?
+                                        '+' + r.montant.toFixed(2) :
                                         '-' + r.montant.toFixed(2);
                 row.insertCell(1).textContent = montantFormatte;
-                
                 row.insertCell(2).textContent = r.type === 'revenu' ? 'Revenu' : 'Dépense';
                 row.insertCell(3).textContent = r.categorie;
                 row.insertCell(4).textContent = r.compte;
                 row.insertCell(5).textContent = r.frequence.charAt(0).toUpperCase() + r.frequence.slice(1);
                 row.insertCell(6).textContent = r.prochaineEcheance;
-
                 const deleteCell = row.insertCell(7);
                 const deleteButton = document.createElement('button');
                 deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
                 deleteButton.classList.add('app-btn', 'delete-btn');
-                deleteButton.onclick = function() { supprimerRecurrence(index); }; 
+                deleteButton.onclick = function() { supprimerRecurrence(index); };
                 deleteCell.appendChild(deleteButton);
             });
         }
-        
+
         function ajouterRecurrence(e) {
             e.preventDefault();
-
             const description = document.getElementById('r-description').value;
             const montant = parseFloat(document.getElementById('r-montant').value);
             const type = rSelectType.value;
@@ -1137,30 +1417,26 @@
             const compte = rSelectCompte.value;
             const frequence = document.getElementById('r-frequence').value;
             const prochaineEcheance = document.getElementById('r-prochaine-echeance').value;
-            
             if (isNaN(montant) || montant <= 0 || !categorie || !compte) {
                 showModal("Veuillez remplir tous les champs de la récurrence.", 'error');
                 return;
             }
-
-            const nouvelleRecurrence = { 
-                description, 
-                montant, 
-                type, 
-                categorie, 
-                compte, 
-                frequence, 
+            const nouvelleRecurrence = {
+                description,
+                montant,
+                type,
+                categorie,
+                compte,
+                frequence,
                 prochaineEcheance
             };
-            
             recurrences.push(nouvelleRecurrence);
             sauvegarderRecurrences();
             recurrenceForm.reset();
             document.getElementById('r-prochaine-echeance').value = new Date().toISOString().substring(0, 10);
-            
             showModal(`Récurrence "${description}" ajoutée au Maître.`, 'success');
         }
-        
+
         function supprimerRecurrence(index) {
             if (confirm("Voulez-vous vraiment supprimer cette récurrence de la liste Maître ?")) {
                 recurrences.splice(index, 1);
@@ -1174,46 +1450,36 @@
                 showModal("Aucune récurrence n'est définie dans la liste Maître.", 'info');
                 return;
             }
-            
             if (!confirm(`Voulez-vous ajouter les ${recurrences.length} récurrences définies à l'onglet actuel (${currentMonthInput.value}) ?`)) {
                 return;
             }
-            
             const dateDuJour = new Date().toISOString().substring(0, 10);
             let addedCount = 0;
-            
-            chargerRecurrences(); 
-
+            chargerRecurrences();
             recurrences.forEach(r => {
                 currentMonthData.transactions.push({
-                    date: dateDuJour, 
-                    description: r.description + ' 🔄 (récurrence)', 
-                    montant: r.montant, 
-                    type: r.type, 
-                    categorie: r.categorie, 
-                    compte: r.compte, 
-                    recurrent: false 
+                    date: dateDuJour,
+                    description: r.description + ' 🔄 (récurrence)',
+                    montant: r.montant,
+                    type: r.type,
+                    categorie: r.categorie,
+                    compte: r.compte,
+                    recurrent: false
                 });
                 addedCount++;
             });
-            
-            sauvegarderTransactions(false); 
-            
+            sauvegarderTransactions(false);
             showScreen('dashboard-screen');
             rechargerTableau();
-
             showModal(`${addedCount} récurrences ajoutées à l'onglet "${currentMonthInput.value}".`, 'success', 5000);
         }
-        
+
         recurrenceForm.addEventListener('submit', ajouterRecurrence);
 
-
         // --- LOGIQUE DE CALCUL, SAUVEGARDE ET CHART.JS ---
-        
         function calculerSolde() {
             let totalRevenus = 0;
             let totalDepenses = 0;
-
             currentMonthData.transactions.forEach(t => {
                 if (t.type === 'revenu') {
                     totalRevenus += t.montant;
@@ -1221,16 +1487,13 @@
                     totalDepenses += t.montant;
                 }
             });
-
             const solde = currentMonthData.soldeOuverture + totalRevenus - totalDepenses;
             return { solde, totalRevenus, totalDepenses };
         }
-        
+
         function mettreAJourSoldeEtTotaux() {
             const { solde } = calculerSolde();
             const soldeFormatted = solde.toFixed(2) + ' €';
-
-            // 1. Mise à jour de la page Analyse (original)
             soldeAnalysisDiv.textContent = soldeFormatted;
             soldeAnalysisDiv.classList.remove('positif', 'negatif');
             if (solde >= 0) {
@@ -1238,8 +1501,6 @@
             } else {
                 soldeAnalysisDiv.classList.add('negatif');
             }
-
-            // 2. Mise à jour du Solde Persistant (NOUVEAU)
             soldeValuePersistent.textContent = soldeFormatted;
             soldeValuePersistent.classList.remove('positif', 'negatif');
             if (solde >= 0) {
@@ -1247,52 +1508,45 @@
             } else {
                 soldeValuePersistent.classList.add('negatif');
             }
-            
-            // Mise à jour des noms d'onglets
             currentTabName.textContent = currentMonthInput.value;
             analysisTabName.textContent = currentMonthInput.value;
             exportTabName.textContent = currentMonthInput.value;
+            currentMonthDisplay.textContent = currentMonthInput.value;
         }
-        
+
         function rechargerTableau() {
-            transactionList.innerHTML = ''; 
-            
+            transactionList.innerHTML = '';
             currentMonthData.transactions.forEach((t, index) => {
                 const row = transactionList.insertRow();
-            
                 row.classList.add(t.type === 'revenu' ? 'revenue-row' : 'expense-row');
-
                 row.insertCell(0).textContent = t.date;
-                row.insertCell(1).textContent = t.description; 
+                row.insertCell(1).textContent = t.description;
                 row.insertCell(2).textContent = t.type === 'revenu' ? 'Revenu' : 'Dépense';
                 row.insertCell(3).textContent = t.categorie;
                 row.insertCell(4).textContent = t.compte;
-                
-                const montantFormatte = t.type === 'revenu' ? 
-                                        '+' + t.montant.toFixed(2) : 
+                const montantFormatte = t.type === 'revenu' ?
+                                        '+' + t.montant.toFixed(2) :
                                         '-' + t.montant.toFixed(2);
                 row.insertCell(5).textContent = montantFormatte;
-
                 const deleteCell = row.insertCell(6);
                 const deleteButton = document.createElement('button');
                 deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
                 deleteButton.classList.add('app-btn', 'delete-btn');
-                deleteButton.onclick = function() { supprimerTransaction(index); }; 
+                deleteButton.onclick = function() { supprimerTransaction(index); };
                 deleteCell.appendChild(deleteButton);
             });
-            
             mettreAJourSoldeEtTotaux();
-            mettreAJourSuiviBudget(); 
+            mettreAJourSuiviBudget();
         }
 
         function ajouterNouvelleTransaction(date, description, montant, type, categorie, compte) {
-            const nouvelleTransaction = { date, description, montant, type, categorie, compte, recurrent: false }; 
+            const nouvelleTransaction = { date, description, montant, type, categorie, compte, recurrent: false };
             currentMonthData.transactions.push(nouvelleTransaction);
             rechargerTableau();
-            sauvegarderTransactions(false); // Sauvegarde après ajout
-            showModal(`Transaction ajoutée : ${description}.`, 'success');
+            sauvegarderTransactions(false);
+            showToast(`Transaction ajoutée : ${description}.`, 'success');
         }
-        
+
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const date = document.getElementById('date').value;
@@ -1301,33 +1555,29 @@
             const type = document.getElementById('type').value;
             const categorie = document.getElementById('categorie').value;
             const compte = document.getElementById('compte').value;
-
             if (isNaN(montant) || montant <= 0 || !categorie || !compte) {
                 showModal("Veuillez vérifier les champs du formulaire.", 'error');
                 return;
             }
-
             ajouterNouvelleTransaction(date, description, montant, type, categorie, compte);
             form.reset();
             document.getElementById('date').value = new Date().toISOString().substring(0, 10);
-            
             chargerSelecteurs();
         });
 
-        
         function supprimerTransaction(index) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cette transaction ?")) { 
+            if (!confirm("Êtes-vous sûr de vouloir supprimer cette transaction ?")) {
                 return;
             }
-            
             currentMonthData.transactions.splice(index, 1);
             rechargerTableau();
             sauvegarderTransactions(false);
-            showModal("Transaction supprimée.", 'info');
+            showToast("Transaction supprimée.", 'info');
         }
-        
+
         function chargerSelecteurs() {
-            const populateSelect = (selectElement, values) => {
+            const populateSelect = (selectElement, values, includeAddOption = true) => {
+                const prev = selectElement.value;
                 selectElement.innerHTML = '<option value="">-- Choisir --</option>';
                 values.forEach(val => {
                     const option = document.createElement('option');
@@ -1335,34 +1585,63 @@
                     option.textContent = val;
                     selectElement.appendChild(option);
                 });
+                if (includeAddOption) {
+                    const addOpt = document.createElement('option');
+                    addOpt.value = '__add_new__';
+                    addOpt.textContent = '➕ Ajouter une nouvelle catégorie…';
+                    selectElement.appendChild(addOpt);
+                }
+                if (values.includes(prev)) selectElement.value = prev;
             };
 
             const updateCategories = (selectElement, typeSelectElement) => {
-                const type = typeSelectElement.value;
+                const type = typeSelectElement ? typeSelectElement.value : 'depense';
                 const cats = type === 'revenu' ? CATEGORIES.revenu : CATEGORIES.depense;
-                populateSelect(selectElement, cats);
+                populateSelect(selectElement, cats, true);
             };
 
-            // Transactions ponctuelles
-            typeSelect.removeEventListener('change', () => updateCategories(selectCategorie, typeSelect));
-            typeSelect.addEventListener('change', () => updateCategories(selectCategorie, typeSelect));
-            updateCategories(selectCategorie, typeSelect); 
-            populateSelect(selectCompte, COMPTES);
-            
-            // Récurrences
-            rSelectType.removeEventListener('change', () => updateCategories(rSelectCategorie, rSelectType));
-            rSelectType.addEventListener('change', () => updateCategories(rSelectCategorie, rSelectType));
-            updateCategories(rSelectCategorie, rSelectType); 
-            populateSelect(rSelectCompte, COMPTES);
+            typeSelect.removeEventListener('change', () => {});
+            typeSelect.addEventListener('change', () => {
+                updateCategories(selectCategorie, typeSelect);
+            });
+            updateCategories(selectCategorie, typeSelect);
+            populateSelect(selectCompte, COMPTES, false);
+
+            rSelectType.removeEventListener('change', () => {});
+            rSelectType.addEventListener('change', () => {
+                updateCategories(rSelectCategorie, rSelectType);
+            });
+            updateCategories(rSelectCategorie, rSelectType);
+            populateSelect(rSelectCompte, COMPTES, false);
+
+            genererChampsBudget();
+
+            [selectCategorie, rSelectCategorie].forEach(sel => {
+                sel.removeEventListener('change', handleAddNewOption);
+                sel.addEventListener('change', handleAddNewOption);
+            });
         }
-        
+
+        function handleAddNewOption(e) {
+            const sel = e.target;
+            if (!sel) return;
+            if (sel.value === '__add_new__') {
+                let forcedType = 'depense';
+                if (sel === rSelectCategorie) {
+                    forcedType = rSelectType ? rSelectType.value : 'depense';
+                } else if (sel === selectCategorie) {
+                    forcedType = typeSelect ? typeSelect.value : 'depense';
+                }
+                newCategoryTypeSelect.value = forcedType;
+                openCategoryModal(sel.id);
+                setTimeout(() => { sel.value = ''; }, 100);
+            }
+        }
+
         function genererChampsBudget() {
-            // S'assurer que les budgets sont chargés avant de générer les champs
             currentMonthData.budgets = currentMonthData.budgets || {};
-            
             budgetForm.innerHTML = '';
-            
-            CATEGORIES.depense.forEach(cat => {
+            (CATEGORIES.depense || []).forEach(cat => {
                 const container = document.createElement('div');
                 container.innerHTML = `
                     <label for="budget-${cat}" style="color:var(--light-text-color);">${cat} (€)</label>
@@ -1371,7 +1650,7 @@
                 budgetForm.appendChild(container);
             });
         }
-        
+
         function lireChampsBudget() {
             currentMonthData.budgets = {};
             budgetForm.querySelectorAll('input[type="number"]').forEach(input => {
@@ -1382,7 +1661,7 @@
                 }
             });
         }
-        
+
         function mettreAJourSuiviBudget() {
             budgetSection.innerHTML = '';
             const depensesParCategorie = currentMonthData.transactions
@@ -1391,28 +1670,22 @@
                     acc[t.categorie] = (acc[t.categorie] || 0) + t.montant;
                     return acc;
                 }, {});
-            
-            // S'assurer qu'il y a des budgets définis avant de continuer
             if (Object.keys(currentMonthData.budgets).length === 0) {
                  budgetSection.innerHTML = `<p style="color: var(--light-text-color);">Aucun budget défini pour le mois actuel. Définissez-les ci-dessus.</p>`;
                  return;
             }
-
             Object.entries(currentMonthData.budgets).forEach(([cat, budgetLimite]) => {
                 const depenseActuelle = depensesParCategorie[cat] || 0;
                 const pourcentage = Math.min(100, (depenseActuelle / budgetLimite) * 100);
                 const reste = budgetLimite - depenseActuelle;
-
                 let barClass = 'budget-safe';
                 let statusText = `${reste.toFixed(2)} € restant(s)`;
-                
                 if (pourcentage >= 100) {
                     barClass = 'budget-danger';
                     statusText = `Dépassé de ${Math.abs(reste).toFixed(2)} € 🚨`;
                 } else if (pourcentage >= 80) {
                     barClass = 'budget-warning';
                 }
-
                 const card = document.createElement('div');
                 card.classList.add('budget-card');
                 card.innerHTML = `
@@ -1433,34 +1706,24 @@
                     acc[t.categorie] = (acc[t.categorie] || 0) + t.montant;
                     return acc;
                 }, {});
-
             const labels = Object.keys(depensesParCategorie);
             const data = Object.values(depensesParCategorie);
-            
             const backgroundColors = [
                 '#FF3366', '#00FFFF', '#FFDD44', '#00FF99', '#9933FF', '#FF66AA', '#33FFFF', '#6666FF'
             ];
-            
-            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF'; 
-
+            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF';
             if (chartInstance) {
                 chartInstance.destroy();
             }
-            
             const canvas = document.getElementById('expense-pie-chart');
-            if (!canvas) return; 
-            
-            // Si aucune donnée, on ne crée pas le graphique.
+            if (!canvas) return;
             if (data.every(d => d === 0) || data.length === 0) {
                  const pieChartContainer = document.getElementById('pie-chart-container');
                  pieChartContainer.innerHTML = '<p style="color: var(--light-text-color); text-align:center; padding-top: 150px;">Aucune donnée de dépense pour ce mois.</p>';
                  return;
             } else {
-                 // Remettre le canvas s'il a été remplacé par le message
                  document.getElementById('pie-chart-container').innerHTML = '<canvas id="expense-pie-chart"></canvas>';
             }
-
-
             const ctx = document.getElementById('expense-pie-chart').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'doughnut',
@@ -1493,63 +1756,39 @@
                 }
             });
         }
-        
-        // DÉBUT AJOUT SOLDE HISTORIQUE
-        
-        /**
-         * Récupère les soldes de clôture de tous les mois enregistrés dans le localStorage.
-         * @returns {Array<Object>} Liste des objets { month: string, balance: number } triés chronologiquement.
-         */
+
         function getHistoricalBalances() {
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort(comparerMois); // Trie chronologiquement
-        
+            const monthNames = Object.keys(allData).sort(comparerMois);
             const historicalData = monthNames.map(monthName => {
-                // S'assurer que les données sont valides pour le calcul
                 const rawData = allData[monthName] ? JSON.parse(allData[monthName]) : { transactions: [], soldeOuverture: 0 };
-                
-                // Utiliser la fonction de calcul de solde existante
-                const { solde } = calculerSoldePrecedent(rawData); 
-                
-                return { 
-                    month: monthName, 
-                    balance: solde 
+                const { solde } = calculerSoldePrecedent(rawData);
+                return {
+                    month: monthName,
+                    balance: solde
                 };
             });
-        
             return historicalData;
         }
 
-        /**
-         * Met à jour le graphique de l'historique des soldes de clôture.
-         */
         function mettreAJourGraphiqueHistorique() {
             const historicalData = getHistoricalBalances();
-
             if (!document.getElementById('balance-history-chart')) return;
-            
-            // Détruire l'instance précédente
             if (historyChartInstance) {
                 historyChartInstance.destroy();
             }
-            
-            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF'; 
+            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF';
             const accentColor = body.classList.contains('light-mode') ? '#007AFF' : '#00FFFF';
-
             const labels = historicalData.map(d => d.month);
             const data = historicalData.map(d => d.balance);
-
             if (data.length === 0) {
                  const balanceChartContainer = document.getElementById('balance-chart-container');
                  balanceChartContainer.innerHTML = '<p style="color: var(--light-text-color); text-align:center; padding-top: 150px;">Aucune donnée de mois enregistrée pour l\'historique. Créez et sauvegardez plusieurs onglets.</p>';
                  return;
             } else {
-                 // Restaurer le canvas s'il a été remplacé par le message
                  document.getElementById('balance-chart-container').innerHTML = '<canvas id="balance-history-chart"></canvas>';
             }
-
             const ctx = document.getElementById('balance-history-chart').getContext('2d');
-            
             historyChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -1618,105 +1857,84 @@
                 }
             });
         }
-        
-        // FIN AJOUT SOLDE HISTORIQUE
-
 
         function sauvegarderTransactions(showMessage = true) {
             const currentMonthName = currentMonthInput.value.trim();
             lireChampsBudget();
             currentMonthData.soldeOuverture = parseFloat(soldeOuvertureInput.value) || 0;
-
             if (!currentMonthName) {
                 showModal("Veuillez donner un nom à cet onglet (ex: Décembre 2025).", 'error');
                 return;
             }
-
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
             allData[currentMonthName] = JSON.stringify(currentMonthData);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
-            
+            localStorage.setItem(LAST_SAVE_KEY, new Date().toISOString());
             chargerListeMois(currentMonthName);
             mettreAJourSuiviBudget();
-            mettreAJourGraphique(); // Mettre à jour les graphiques après la sauvegarde
-            mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique après sauvegarde
-            
+            mettreAJourGraphique();
+            mettreAJourGraphiqueHistorique();
+            mettreAJourTimeline();
             if (showMessage) {
-                showModal(`Onglet "${currentMonthName}" sauvegardé avec succès !`, 'success');
+                showToast(`Onglet "${currentMonthName}" sauvegardé !`, 'success');
             }
         }
-        
+
         function chargerTransactions() {
             const monthToLoad = selectMonth.value;
-            
             if (monthToLoad === 'new') {
                 gererNouveauMois();
                 return;
             }
-            
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            
             if (allData[monthToLoad]) {
                 currentMonthData = JSON.parse(allData[monthToLoad]);
                 currentMonthData.transactions = currentMonthData.transactions || [];
                 currentMonthData.soldeOuverture = parseFloat(currentMonthData.soldeOuverture) || 0;
-                // S'assurer que l'objet budgets existe
-                currentMonthData.budgets = currentMonthData.budgets || {}; 
+                currentMonthData.budgets = currentMonthData.budgets || {};
                 transactions = currentMonthData.transactions;
-                
                 currentMonthInput.value = monthToLoad;
                 soldeOuvertureInput.value = currentMonthData.soldeOuverture.toFixed(2);
-                
-                genererChampsBudget(); // Charge les budgets dans le formulaire
+                genererChampsBudget();
                 rechargerTableau();
-                
-                // Mettre à jour l'analyse si on charge un mois
                 if (document.getElementById('analysis-screen').classList.contains('active')) {
                     mettreAJourGraphique();
-                    mettreAJourGraphiqueHistorique(); // AJOUTÉ : Mise à jour du graphique historique lors du chargement
+                    mettreAJourGraphiqueHistorique();
                     mettreAJourSoldeEtTotaux();
                     mettreAJourSuiviBudget();
                 }
-                
             } else {
                 showModal(`Erreur: Les données pour "${monthToLoad}" sont introuvables.`, 'error');
             }
         }
-        
+
         function preparerNouvelOnglet(soldePrecedent = 0, moisPrecedentNom = null) {
             currentMonthData = {
                 transactions: [],
                 soldeOuverture: soldePrecedent,
-                budgets: {} // Les budgets sont réinitialisés pour le nouveau mois
+                budgets: {}
             };
             transactions = currentMonthData.transactions;
-            
             const nextMonth = new Date();
             if (moisPrecedentNom) {
                 const parts = moisPrecedentNom.split(' ');
                 const year = parseInt(parts.pop());
                 const month = parts.join(' ');
-                
                 let monthIndex = -1;
                 const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-                
                 monthIndex = monthNames.indexOf(month.toLowerCase());
-
                 if (monthIndex !== -1) {
                     nextMonth.setFullYear(year);
-                    nextMonth.setMonth(monthIndex + 1); 
+                    nextMonth.setMonth(monthIndex + 1);
                 } else {
                     nextMonth.setMonth(nextMonth.getMonth() + 1);
                 }
             } else {
-                nextMonth.setMonth(nextMonth.getMonth()); // Commence sur le mois actuel si aucune donnée
+                nextMonth.setMonth(nextMonth.getMonth());
             }
-            
             const monthName = nextMonth.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
-            
             currentMonthInput.value = monthName.charAt(0).toUpperCase() + monthName.slice(1);
             soldeOuvertureInput.value = soldePrecedent.toFixed(2);
-            
             genererChampsBudget();
             rechargerTableau();
             showModal(`Nouvel onglet créé : ${currentMonthInput.value}. Solde de départ basé sur le mois précédent.`, 'info', 4000);
@@ -1724,22 +1942,21 @@
 
         function gererNouveauMois() {
             const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            // Trie chronologique pour trouver le dernier mois
-            const monthNames = Object.keys(allData).sort(comparerMois).reverse(); 
-            
+            const monthNames = Object.keys(allData).sort(comparerMois).reverse();
             if (monthNames.length > 0) {
                 const lastMonthName = monthNames[0];
                 const lastMonthData = JSON.parse(allData[lastMonthName]);
-                
-                // On doit recalculer le solde de clôture du DERNIER mois sauvegardé
                 const { solde: soldeCloture } = calculerSoldePrecedent(lastMonthData);
-
-                preparerNouvelOnglet(soldeCloture, lastMonthName);
+                newMonthOpeningBalanceInput.value = soldeCloture.toFixed(2);
+                newMonthHelpText.textContent = `Ce solde correspond au solde de clôture de ${lastMonthName}.`;
+                openNewMonthModal();
             } else {
-                preparerNouvelOnglet(0, null); // Pas de mois précédent, commence à 0 sur le mois actuel
+                newMonthOpeningBalanceInput.value = "0.00";
+                newMonthHelpText.textContent = "Premier mois : entrez votre solde bancaire actuel.";
+                openNewMonthModal();
             }
         }
-        
+
         function calculerSoldePrecedent(data) {
             let totalRevenus = 0;
             let totalDepenses = 0;
@@ -1754,67 +1971,50 @@
             return { solde };
         }
 
-
         function supprimerMoisSelectionne() {
             const monthToDelete = selectMonth.value;
-
             if (monthToDelete === 'new') {
                 showModal("Vous ne pouvez pas supprimer l'option 'Nouveau Mois'.", 'error');
                 return;
             }
-            
             if (!confirm(`Êtes-vous sûr de vouloir supprimer DÉFINITIVEMENT l'onglet "${monthToDelete}" ?`)) {
                 return;
             }
-
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            delete allData[monthToDelete]; 
+            delete allData[monthToDelete];
             localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
-            
             showModal(`Onglet "${monthToDelete}" supprimé.`, 'success');
-            
             chargerListeMois();
-            // Assure qu'on est sur le Dashboard après la suppression
             showScreen('dashboard-screen');
-            // La fonction chargerListeMois appellera gererNouveauMois si aucun mois n'est sélectionné
         }
 
-        // Fonction utilitaire pour trier les noms de mois
         function comparerMois(a, b) {
             const parseMonth = (monthName) => {
                 const [monthStr, yearStr] = monthName.split(' ');
                 const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
                 const monthIndex = monthNames.indexOf(monthStr.toLowerCase());
-                
                 if (monthIndex === -1) return new Date(parseInt(yearStr), 0, 1);
-                
                 return new Date(parseInt(yearStr), monthIndex, 1);
             };
-
             const dateA = parseMonth(a);
             const dateB = parseMonth(b);
-            
-            return dateA - dateB; 
+            return dateA - dateB;
         }
-        
+
         function chargerListeMois(selectedMonth = null) {
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort(comparerMois).reverse(); 
-            
-            selectMonth.innerHTML = ''; 
-            
+            const monthNames = Object.keys(allData).sort(comparerMois).reverse();
+            selectMonth.innerHTML = '';
             const newOption = document.createElement('option');
             newOption.value = 'new';
             newOption.textContent = '--- Nouveau Mois ---';
             selectMonth.appendChild(newOption);
-
             monthNames.forEach(month => {
                 const option = document.createElement('option');
                 option.value = month;
                 option.textContent = month;
                 selectMonth.appendChild(option);
             });
-            
             if (selectedMonth) {
                 selectMonth.value = selectedMonth;
             } else if (monthNames.length > 0) {
@@ -1822,27 +2022,23 @@
             } else {
                 selectMonth.value = 'new';
             }
-            
             if (selectMonth.value !== 'new') {
                  chargerTransactions();
             } else {
                  gererNouveauMois();
             }
+            monthPositionIndicator.textContent = `${monthNames.length > 0 ? Object.keys(allData).length : 0}/${monthNames.length} mois`;
         }
-        
+
         function naviguerMois(direction) {
             const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            const monthNames = Object.keys(allData).sort(comparerMois); 
-            
+            const monthNames = Object.keys(allData).sort(comparerMois);
             const currentIndex = monthNames.indexOf(selectMonth.value);
-            
             if (currentIndex === -1 || selectMonth.value === 'new') {
                 showModal("Veuillez sélectionner un mois valide pour naviguer.", 'error');
                 return;
             }
-            
             let newIndex = currentIndex + direction;
-            
             if (newIndex >= 0 && newIndex < monthNames.length) {
                 selectMonth.value = monthNames[newIndex];
                 chargerTransactions();
@@ -1850,23 +2046,133 @@
                 showModal(direction === -1 ? "Vous êtes sur le mois le plus ancien enregistré." : "Vous êtes sur le mois le plus récent enregistré.", 'info');
             }
         }
-        
+
+        function mettreAJourTimeline() {
+            const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            const monthNames = Object.keys(allData).sort(comparerMois).reverse();
+            monthTimeline.innerHTML = '';
+            monthNames.forEach(month => {
+                const monthData = JSON.parse(allData[month]);
+                const { solde } = calculerSoldePrecedent(monthData);
+                const monthCard = document.createElement('div');
+                monthCard.classList.add('timeline-month');
+                if (selectMonth.value === month) {
+                    monthCard.classList.add('active');
+                }
+                monthCard.innerHTML = `
+                    <div class="month-name">${month}</div>
+                    <div class="month-balance">${solde >= 0 ? '+' : ''}${solde.toFixed(2)} €</div>
+                `;
+                monthCard.onclick = () => {
+                    selectMonth.value = month;
+                    chargerTransactions();
+                };
+                monthTimeline.appendChild(monthCard);
+            });
+        }
+
+        // --- GESTION DES CATÉGORIES ---
+        let pendingTargetSelectId = null;
+        function openCategoryModal(targetSelectId = null) {
+            pendingTargetSelectId = targetSelectId || null;
+            newCategoryNameInput.value = '';
+            newCategoryTypeSelect.value = 'depense';
+            categoryModal.classList.add('active');
+            categoryModal.setAttribute('aria-hidden','false');
+            newCategoryNameInput.focus();
+        }
+        function closeCategoryModal() {
+            pendingTargetSelectId = null;
+            categoryModal.classList.remove('active');
+            categoryModal.setAttribute('aria-hidden','true');
+        }
+        function addCategoryFromModal() {
+            const rawName = newCategoryNameInput.value.trim();
+            const type = newCategoryTypeSelect.value;
+            if (!rawName) {
+                showModal("Veuillez renseigner un nom de catégorie valide.", 'error');
+                return;
+            }
+            const name = rawName;
+            const existing = (CATEGORIES[type] || []).some(c => c.toLowerCase() === name.toLowerCase());
+            if (existing) {
+                showModal("Cette catégorie existe déjà.", 'error');
+                return;
+            }
+            CATEGORIES[type].push(name);
+            saveCategoriesToStorage(CATEGORIES);
+            chargerSelecteurs();
+            mettreAJourGraphique();
+            genererChampsBudget();
+            mettreAJourSuiviBudget();
+            showToast(`Catégorie "${name}" ajoutée (${type}).`, 'success');
+            if (pendingTargetSelectId) {
+                setTimeout(() => {
+                    const sel = document.getElementById(pendingTargetSelectId);
+                    if (sel) {
+                        sel.value = name;
+                        sel.dispatchEvent(new Event('change'));
+                    }
+                    closeCategoryModal();
+                }, 150);
+            } else {
+                closeCategoryModal();
+            }
+        }
+        confirmAddCategoryBtn.addEventListener('click', addCategoryFromModal);
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCategoryModal();
+            }
+        });
+
+        // --- GESTION DE LA MODALE DE NOUVEAU MOIS ---
+        function openNewMonthModal() {
+            newMonthModal.classList.add('active');
+            document.getElementById('new-month-name').focus();
+        }
+        function closeNewMonthModal() {
+            newMonthModal.classList.remove('active');
+        }
+        function createNewMonthFromModal() {
+            const monthName = newMonthNameInput.value.trim();
+            const openingBalance = parseFloat(newMonthOpeningBalanceInput.value) || 0;
+            if (!monthName) {
+                showModal("Veuillez entrer un nom pour le nouveau mois.", 'error');
+                return;
+            }
+            currentMonthData = {
+                transactions: [],
+                soldeOuverture: openingBalance,
+                budgets: {}
+            };
+            transactions = currentMonthData.transactions;
+            currentMonthInput.value = monthName;
+            soldeOuvertureInput.value = openingBalance.toFixed(2);
+            genererChampsBudget();
+            rechargerTableau();
+            let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            allData[monthName] = JSON.stringify(currentMonthData);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+            chargerListeMois(monthName);
+            mettreAJourTimeline();
+            showToast(`Nouvel onglet "${monthName}" créé avec succès !`, 'success');
+            closeNewMonthModal();
+        }
+
         // --- LOGIQUE D'IMPORT/EXPORT ---
-        
         function exportToCSV() {
             if (currentMonthData.transactions.length === 0) {
                 showModal("Aucune transaction à exporter dans cet onglet.", 'info');
                 return;
             }
-            
             const headers = ["date", "description", "montant", "type", "categorie", "compte", "recurrent"];
             const headerRow = headers.join(';');
-            
             const csvRows = currentMonthData.transactions.map(t => {
                 const values = [
                     t.date,
-                    t.description.replace(/"/g, '""'), 
-                    t.montant.toFixed(2).replace('.', ','), 
+                    t.description.replace(/"/g, '""'),
+                    t.montant.toFixed(2).replace('.', ','),
                     t.type,
                     t.categorie,
                     t.compte,
@@ -1874,100 +2180,104 @@
                 ];
                 return values.map(v => `"${v}"`).join(';');
             });
-
             const csvContent = [headerRow, ...csvRows].join('\n');
-            
-            const blob = new Blob(["\uFEFF", csvContent], { type: 'text/csv;charset=utf-8;' }); 
+            const blob = new Blob(["\uFEFF", csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            
             a.href = url;
             a.download = `transactions_${currentMonthInput.value.replace(/ /g, '_')}_${new Date().toISOString().substring(0, 10)}.csv`;
-            
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
-            showModal("Export CSV terminé avec succès !", 'success');
+            showToast("Export CSV terminé avec succès !", 'success');
         }
-        
+
         function importFromCSV(event) {
             const file = event.target.files[0];
-            if (!file) {
-                return;
-            }
-
-            if (!confirm(`Confirmez-vous l'importation de "${file.name}"? Les transactions actuelles de l'onglet seront REMPLACÉES.`)) {
-                document.getElementById('csv-file').value = '';
-                return;
-            }
-
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n').filter(line => line.trim() !== '');
-
-                if (lines.length <= 1) {
-                    showModal("Le fichier CSV est vide ou illisible.", 'error');
+                const content = e.target.result;
+                const lines = content.split('\n');
+                if (lines.length < 2) {
+                    showModal("Fichier CSV invalide ou vide.", 'error');
                     return;
                 }
-
-                const newTransactions = [];
+                const headers = lines[0].split(';').map(h => h.replace(/"/g, '').trim());
+                if (!headers.includes('date') || !headers.includes('montant')) {
+                    showModal("Format de fichier CSV incorrect. Les colonnes 'date' et 'montant' sont requises.", 'error');
+                    return;
+                }
+                if (!confirm("L'importation va remplacer toutes les transactions actuelles de cet onglet. Continuer ?")) {
+                    return;
+                }
+                const transactions = [];
                 for (let i = 1; i < lines.length; i++) {
-                    // Expression régulière pour gérer les séparateurs et les champs entre guillemets
-                    const values = lines[i].match(/(".*?"|[^;]+)/g) || [];
-                    
-                    if (values.length < 6) continue;
-
-                    const date = values[0].replace(/"/g, '').trim();
-                    const description = values[1].replace(/"/g, '').trim();
-                    const montantStr = values[2].replace(/"/g, '').trim().replace(',', '.');
-                    const type = values[3].replace(/"/g, '').trim();
-                    const categorie = values[4].replace(/"/g, '').trim();
-                    const compte = values[5].replace(/"/g, '').trim();
-                    
-                    const montant = parseFloat(montantStr);
-
-                    if (date && description && !isNaN(montant) && ['revenu', 'depense'].includes(type) && categorie && compte) {
-                         newTransactions.push({ date, description, montant, type, categorie, compte, recurrent: false });
-                    }
+                    if (!lines[i].trim()) continue;
+                    const values = lines[i].split(';').map(v => v.replace(/"/g, '').trim());
+                    const transaction = {};
+                    headers.forEach((header, index) => {
+                        if (header === 'montant') {
+                            transaction[header] = parseFloat(values[index].replace(',', '.'));
+                        } else if (header === 'recurrent') {
+                            transaction[header] = values[index] === 'Oui';
+                        } else {
+                            transaction[header] = values[index];
+                        }
+                    });
+                    transactions.push(transaction);
                 }
-                
-                if (newTransactions.length > 0) {
-                    currentMonthData.transactions = newTransactions;
-                    sauvegarderTransactions(false); 
-                    rechargerTableau();
-                    showScreen('dashboard-screen'); // Retourne à l'onglet principal
-                    showModal(`${newTransactions.length} transactions importées et sauvegardées !`, 'success', 5000);
-                } else {
-                    showModal("Aucune transaction valide n'a pu être lue dans le fichier.", 'error');
-                }
+                currentMonthData.transactions = transactions;
+                rechargerTableau();
+                sauvegarderTransactions();
+                showToast("Import CSV terminé avec succès !", 'success');
             };
-            reader.readAsText(file, 'UTF-8');
-            document.getElementById('csv-file').value = ''; 
+            reader.readAsText(file);
         }
 
+        // --- SAUVEGARDE AUTOMATIQUE ---
+        function setupAutoSave() {
+            const lastSave = localStorage.getItem(LAST_SAVE_KEY);
+            if (lastSave) {
+                const lastSaveDate = new Date(lastSave);
+                const now = new Date();
+                const diffMinutes = (now - lastSaveDate) / (1000 * 60);
+                if (diffMinutes > 5) {
+                    showToast("Sauvegarde automatique activée. Dernière sauvegarde il y a " + Math.round(diffMinutes) + " min.", 'info', 5000);
+                }
+            }
+            autoSaveInterval = setInterval(() => {
+                sauvegarderTransactions(false);
+            }, 300000); // 5 minutes
+        }
 
+        // --- RACCOURCIS CLAVIER ---
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                sauvegarderTransactions();
+            }
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                openNewMonthModal();
+            }
+        });
         // --- INITIALISATION ---
-        function init() {
+        window.onload = function() {
             loadThemePreference();
-            chargerSelecteurs(); 
-            
-            chargerListeMois(); // Charge le premier onglet disponible ou crée un nouveau mois
-            
-            // Démarrer sur le Tableau de Bord
-            showScreen('dashboard-screen');
-            
-            // Initialiser les dates
-            const today = new Date().toISOString().substring(0, 10);
-            document.getElementById('date').value = today;
-            document.getElementById('r-prochaine-echeance').value = today;
-        }
+            chargerSelecteurs();
+            chargerListeMois();
+            chargerRecurrences();
+            setupAutoSave();
 
-        init();
+
+            const lastSave = localStorage.getItem(LAST_SAVE_KEY);
+            if (lastSave) {
+                const lastSaveDate = new Date(lastSave);
+                showToast(`Dernière sauvegarde : ${lastSaveDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`, 'info', 4000);
+            }
+        };
     </script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@vercel/speed-insights/dist/script.js" defer></script>
 </body>
 </html>
