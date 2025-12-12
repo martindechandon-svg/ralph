@@ -870,6 +870,74 @@
             justify-content: flex-end;
             margin-top: 20px;
         }
+		
+		/* Modale de confirmation personnalisée */
+		#confirm-modal {
+		    display: none;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background-color: rgba(0, 0, 0, 0.7);
+		    z-index: 3000;
+		    align-items: center;
+		    justify-content: center;
+		}
+
+		#confirm-modal.active {
+		    display: flex;
+		}
+
+		.confirm-content {
+		    background-color: var(--card-color);
+		    padding: 30px;
+		    border-radius: var(--border-radius);
+		    box-shadow: var(--shadow-deep);
+		    border: 2px solid var(--neon-danger);
+		    max-width: 90%;
+		    width: 400px;
+		    text-align: center;
+		    animation: slideDown 0.3s ease;
+		}
+
+		@keyframes slideDown {
+		    from {
+		        transform: translateY(-50px);
+		        opacity: 0;
+		    }
+		    to {
+		        transform: translateY(0);
+		        opacity: 1;
+		    }
+		}
+
+		#confirm-icon {
+		    font-size: 3em;
+		    color: var(--neon-danger);
+		    margin-bottom: 15px;
+		}
+
+		#confirm-title {
+		    color: var(--neon-danger);
+		    margin: 10px 0;
+		    font-size: 1.5em;
+		}
+
+		#confirm-message {
+		    color: var(--text-color);
+		    margin: 20px 0;
+		    font-size: 1.1em;
+		    line-height: 1.5;
+		}
+
+		.confirm-actions {
+		    display: flex;
+		    gap: 15px;
+		    justify-content: center;
+		    margin-top: 25px;
+		}
+		
 
         /* Bouton flottant de sauvegarde */
         .fab-btn {
@@ -1046,6 +1114,18 @@
             <button class="app-btn save-btn" onclick="createNewMonthFromModal()">Créer</button>
         </div>
     </div>
+	
+	<div id="confirm-modal">
+	    <div class="confirm-content">
+	        <i id="confirm-icon" class="fas fa-exclamation-triangle"></i>
+	        <h3 id="confirm-title">Confirmer l'action</h3>
+	        <p id="confirm-message">Êtes-vous sûr de vouloir continuer ?</p>
+	        <div class="confirm-actions">
+	            <button class="app-btn delete-btn" onclick="closeConfirmModal(false)">Annuler</button>
+	            <button class="app-btn save-btn" id="confirm-yes-btn">Confirmer</button>
+	        </div>
+	    </div>
+	</div>
 
     <div id="notification-modal" class="modal-info">
         <i id="modal-icon" class="fas fa-info-circle"></i>
@@ -2151,8 +2231,14 @@
 		        monthTimeline.appendChild(monthCard);
 		    });
 		}
-		function supprimerMois(monthName) {
-		    if (!confirm(`Êtes-vous sûr de vouloir supprimer DÉFINITIVEMENT le mois "${monthName}" et toutes ses transactions ?`)) {
+		async function supprimerMois(monthName) {
+		    const confirmed = await showConfirm(
+		        `Êtes-vous sûr de vouloir supprimer DÉFINITIVEMENT le mois "${monthName}" et toutes ses transactions ?`,
+		        'Supprimer un mois',
+		        'fas fa-trash-alt'
+		    );
+    
+		    if (!confirmed) {
 		        return;
 		    }
     
@@ -2167,7 +2253,6 @@
 		            currentMonthInput.value = remainingMonths[remainingMonths.length - 1];
 		            chargerTransactions();
 		        } else {
-		            // Plus aucun mois, créer un nouveau
 		            gererNouveauMois();
 		        }
 		    }
@@ -2210,6 +2295,44 @@
 		    chargerTransactions();
 		    mettreAJourTimeline();
 		    showToast(`Mois renommé en "${newName}".`, 'success');
+		}
+		
+		// Variables pour la modale de confirmation
+		let confirmCallback = null;
+
+		function showConfirm(message, title = "Confirmer l'action", iconClass = "fas fa-exclamation-triangle") {
+		    return new Promise((resolve) => {
+		        const modal = document.getElementById('confirm-modal');
+		        const icon = document.getElementById('confirm-icon');
+		        const titleEl = document.getElementById('confirm-title');
+		        const messageEl = document.getElementById('confirm-message');
+		        const yesBtn = document.getElementById('confirm-yes-btn');
+        
+		        icon.className = iconClass;
+		        titleEl.textContent = title;
+		        messageEl.textContent = message;
+        
+		        modal.classList.add('active');
+        
+		        // Fonction de confirmation
+		        yesBtn.onclick = () => {
+		            modal.classList.remove('active');
+		            resolve(true);
+		        };
+        
+		        // Stocker le callback pour l'annulation
+		        confirmCallback = () => {
+		            modal.classList.remove('active');
+		            resolve(false);
+		        };
+		    });
+		}
+
+		function closeConfirmModal(result) {
+		    if (confirmCallback) {
+		        confirmCallback();
+		        confirmCallback = null;
+		    }
 		}
 
         // --- GESTION DES CATÉGORIES ---
