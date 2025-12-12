@@ -794,6 +794,32 @@
 		    background: #FF0033;
 		    transform: scale(1.1);
 		}
+		.edit-month-btn {
+		    position: absolute;
+		    top: 2px;
+		    right: 24px;
+		    background: var(--neon-accent);
+		    color: var(--card-color);
+		    border: none;
+		    width: 20px;
+		    height: 20px;
+		    border-radius: 50%;
+		    cursor: pointer;
+		    font-size: 0.7em;
+		    display: none;
+		    align-items: center;
+		    justify-content: center;
+		    transition: all 0.2s;
+		}
+
+		.timeline-month:hover .edit-month-btn {
+		    display: flex;
+		}
+
+		.edit-month-btn:hover {
+		    background: var(--neon-success);
+		    transform: scale(1.1);
+		}
         .timeline-month:hover {
             border-color: var(--neon-accent);
             box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
@@ -2214,20 +2240,20 @@
 		        if (currentActiveMonth === month) {
 		            monthCard.classList.add('active');
 		        }
-		        monthCard.innerHTML = `
-		            <button class="delete-month-btn" onclick="supprimerMois('${month.replace(/'/g, "\\'")}'); event.stopPropagation();" title="Supprimer ce mois">
-		                <i class="fas fa-times"></i>
-		            </button>
-		            <div class="month-name">${month}</div>
-		            <div class="month-balance">${solde >= 0 ? '+' : ''}${solde.toFixed(2)} €</div>
-		        `;
+				monthCard.innerHTML = `
+				    <button class="delete-month-btn" onclick="supprimerMois('${month.replace(/'/g, "\\'")}'); event.stopPropagation();" title="Supprimer ce mois">
+				        <i class="fas fa-times"></i>
+				    </button>
+				    <button class="edit-month-btn" onclick="renommerMois('${month.replace(/'/g, "\\'")}'); event.stopPropagation();" title="Renommer ce mois">
+				        <i class="fas fa-edit"></i>
+				    </button>
+				    <div class="month-name">${month}</div>
+				    <div class="month-balance">${solde >= 0 ? '+' : ''}${solde.toFixed(2)} €</div>
+				`;
 		        monthCard.onclick = () => {
 		            currentMonthInput.value = month;
 		            chargerTransactions();
 		        };
-				monthCard.ondblclick = () => {
-				    renommerMois(month);
-				};
 		        monthTimeline.appendChild(monthCard);
 		    });
 		}
