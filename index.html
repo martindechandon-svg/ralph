@@ -2340,63 +2340,68 @@
             });
         }
 
-        function mettreAJourGraphique() {
-            const depensesParCategorie = currentMonthData.transactions
-                .filter(t => t.type === 'depense')
-                .reduce((acc, t) => {
-                    acc[t.categorie] = (acc[t.categorie] || 0) + t.montant;
-                    return acc;
-                }, {});
-            const labels = Object.keys(depensesParCategorie);
-            const data = Object.values(depensesParCategorie);
-            const backgroundColors = [
-                '#FF3366', '#00FFFF', '#FFDD44', '#00FF99', '#9933FF', '#FF66AA', '#33FFFF', '#6666FF'
-            ];
-            const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF';
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-            const canvas = document.getElementById('expense-pie-chart');
-            if (!canvas) return;
-            if (data.every(d => d === 0) || data.length === 0) {
-                 const pieChartContainer = document.getElementById('pie-chart-container');
-                 pieChartContainer.innerHTML = '<p style="color: var(--light-text-color); text-align:center; padding-top: 150px;">Aucune donnée de dépense pour ce mois.</p>';
-                 return;
-            } else {
-                 document.getElementById('pie-chart-container').innerHTML = '<canvas id="expense-pie-chart"></canvas>';
-            }
-            const ctx = document.getElementById('expense-pie-chart').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: backgroundColors.slice(0, data.length),
-                        hoverOffset: 10,
-                        borderColor: body.classList.contains('light-mode') ? '#FFFFFF' : '#1A1A2E',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                color: textColor,
-                                font: {
-                                    family: 'Poppins',
-                                    size: 12
-                                }
-                            }
-                        },
-                        title: { display: false }
-                    }
-                }
-            });
-        }
+		function mettreAJourGraphique() {
+		    const depensesParCategorie = currentMonthData.transactions
+		        .filter(t => t.type === 'depense')
+		        .reduce((acc, t) => {
+		            acc[t.categorie] = (acc[t.categorie] || 0) + t.montant;
+		            return acc;
+		        }, {});
+		    const labels = Object.keys(depensesParCategorie);
+		    const data = Object.values(depensesParCategorie);
+		    const backgroundColors = [
+		        '#FF3366', '#00FFFF', '#FFDD44', '#00FF99', '#9933FF', '#FF66AA', '#33FFFF', '#6666FF'
+		    ];
+		    const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF';
+    
+		    if (chartInstance) {
+		        chartInstance.destroy();
+		    }
+    
+		    if (data.every(d => d === 0) || data.length === 0) {
+		         const pieChartContainer = document.getElementById('pie-chart-container');
+		         pieChartContainer.innerHTML = '<p style="color: var(--light-text-color); text-align:center; padding-top: 150px;">Aucune donnée de dépense pour ce mois.</p>';
+		         return;
+		    } else {
+		         document.getElementById('pie-chart-container').innerHTML = '<canvas id="expense-pie-chart"></canvas>';
+		    }
+    
+		    // Récupérer le nouveau canvas après l'avoir recréé
+		    const newCanvas = document.getElementById('expense-pie-chart');
+		    if (!newCanvas) return;
+		    const ctx = newCanvas.getContext('2d');
+    
+		    chartInstance = new Chart(ctx, {
+		        type: 'doughnut',
+		        data: {
+		            labels: labels,
+		            datasets: [{
+		                data: data,
+		                backgroundColor: backgroundColors.slice(0, data.length),
+		                hoverOffset: 10,
+		                borderColor: body.classList.contains('light-mode') ? '#FFFFFF' : '#1A1A2E',
+		                borderWidth: 2
+		            }]
+		        },
+		        options: {
+		            responsive: true,
+		            maintainAspectRatio: false,
+		            plugins: {
+		                legend: {
+		                    position: 'right',
+		                    labels: {
+		                        color: textColor,
+		                        font: {
+		                            family: 'Poppins',
+		                            size: 12
+		                        }
+		                    }
+		                },
+		                title: { display: false }
+		            }
+		        }
+		    });
+		}
 
         function getHistoricalBalances() {
             let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
