@@ -380,6 +380,62 @@
             color: var(--card-color);
             box-shadow: 0 0 20px var(--neon-danger);
         }
+		
+		#calendar-container {
+		    display: grid;
+		    grid-template-columns: repeat(7, 1fr);
+		    gap: 5px;
+		    margin-top: 20px;
+		}
+
+		.calendar-day {
+		    background-color: var(--card-color);
+		    border: 1px solid var(--border-color);
+		    border-radius: 8px;
+		    padding: 10px;
+		    min-height: 100px;
+		    position: relative;
+		}
+
+		.calendar-day-header {
+		    font-weight: 600;
+		    color: var(--neon-accent);
+		    margin-bottom: 5px;
+		    font-size: 0.9em;
+		}
+
+		.calendar-day.other-month {
+		    opacity: 0.3;
+		}
+
+		.calendar-transaction {
+		    font-size: 0.75em;
+		    padding: 2px 5px;
+		    margin: 2px 0;
+		    border-radius: 4px;
+		    cursor: pointer;
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		}
+
+		.calendar-transaction.revenu {
+		    background-color: rgba(0, 255, 153, 0.2);
+		    color: var(--neon-success);
+		}
+
+		.calendar-transaction.depense {
+		    background-color: rgba(255, 51, 102, 0.2);
+		    color: var(--neon-danger);
+		}
+
+		.calendar-day-total {
+		    font-size: 0.8em;
+		    font-weight: 600;
+		    margin-top: 5px;
+		    padding-top: 5px;
+		    border-top: 1px solid var(--border-color);
+		}
 
         #persistent-balance {
             display: flex;
@@ -1227,6 +1283,7 @@
             <button class="nav-btn" data-screen="analysis-screen"><i class="fas fa-chart-line"></i> Analyse</button>
             <button class="nav-btn" data-screen="recurrence-page"><i class="fas fa-sync-alt"></i> Récurrences</button>
             <button class="nav-btn" data-screen="transfer-page"><i class="fas fa-exchange-alt"></i> Transfert & Sauvegarde</button>
+			<button class="nav-btn" data-screen="calendar-screen"><i class="fas fa-calendar"></i> Calendrier</button>
         </nav>
 
         <!-- NOUVELLE BARRE DE NAVIGATION MOIS -->
@@ -1272,25 +1329,66 @@
             <hr class="separator">
 
             <h2><i class="fas fa-list-alt"></i> Historique des Transactions (<span id="current-tab-name" style="color:var(--neon-success);">Janvier 2026</span>)</h2>
+			
+			<div class="filter-section" style="background-color: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+			    <input type="text" id="search-input" placeholder="🔍 Rechercher..." style="flex: 1; min-width: 200px;">
+			    <select id="filter-type" style="min-width: 120px;">
+			        <option value="">Tous types</option>
+			        <option value="revenu">Revenus</option>
+			        <option value="depense">Dépenses</option>
+			    </select>
+			    <select id="filter-category" style="min-width: 150px;">
+			        <option value="">Toutes catégories</option>
+			    </select>
+			    <select id="filter-account" style="min-width: 150px;">
+			        <option value="">Tous comptes</option>
+			    </select>
+			    <button class="app-btn compact-switch-btn" onclick="reinitialiserFiltres()" style="padding: 8px 12px;">
+			        <i class="fas fa-redo"></i> Réinitialiser
+			    </button>
+			</div>
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Type</th>
-                        <th>Catégorie</th>
-                        <th>Compte</th>
-                        <th>Montant (€)</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+<thead>
+    <tr>
+        <th onclick="trierTransactions('date')" style="cursor: pointer;">
+            Date <i class="fas fa-sort" id="sort-icon-date"></i>
+        </th>
+        <th onclick="trierTransactions('description')" style="cursor: pointer;">
+            Description <i class="fas fa-sort" id="sort-icon-description"></i>
+        </th>
+        <th onclick="trierTransactions('type')" style="cursor: pointer;">
+            Type <i class="fas fa-sort" id="sort-icon-type"></i>
+        </th>
+        <th onclick="trierTransactions('categorie')" style="cursor: pointer;">
+            Catégorie <i class="fas fa-sort" id="sort-icon-categorie"></i>
+        </th>
+        <th onclick="trierTransactions('compte')" style="cursor: pointer;">
+            Compte <i class="fas fa-sort" id="sort-icon-compte"></i>
+        </th>
+        <th onclick="trierTransactions('montant')" style="cursor: pointer;">
+            Montant (€) <i class="fas fa-sort" id="sort-icon-montant"></i>
+        </th>
+        <th>Action</th>
+    </tr>
+</thead>
                 <tbody id="transaction-list"></tbody>
             </table>
         </div>
+		
+		<div id="calendar-screen" class="screen">
+		    <h2><i class="fas fa-calendar-alt"></i> Calendrier des Transactions</h2>
+		    <div id="calendar-container"></div>
+		</div>
 
         <div id="analysis-screen" class="screen">
             <h2><i class="fas fa-money-check-alt"></i> Solde Actuel (<span id="analysis-tab-name" style="color:var(--neon-accent);">Janvier 2026</span>)</h2>
             <div id="solde-analysis" class="positif" style="margin-bottom: 40px;">0.00 €</div>
+			
+			<hr class="separator">
+			<h2><i class="fas fa-chart-line"></i> Évolution Revenus vs Dépenses</h2>
+			<div class="chart-container" style="margin-bottom: 40px;">
+			    <canvas id="revenue-expense-chart"></canvas>
+			</div>
 
             <h2><i class="fas fa-chart-pie"></i> Suivi & Répartition des Dépenses</h2>
             <div class="analysis-grid">
@@ -1477,6 +1575,217 @@
             }
             return { revenu: DEFAULT_CATEGORIES.revenu.slice(), depense: DEFAULT_CATEGORIES.depense.slice() };
         }
+		
+		let filtresActifs = {
+		    recherche: '',
+		    type: '',
+		    categorie: '',
+		    compte: ''
+		};
+
+		function initialiserFiltres() {
+		    const searchInput = document.getElementById('search-input');
+		    const filterType = document.getElementById('filter-type');
+		    const filterCategory = document.getElementById('filter-category');
+		    const filterAccount = document.getElementById('filter-account');
+    
+		    if (searchInput) {
+		        searchInput.addEventListener('input', (e) => {
+		            filtresActifs.recherche = e.target.value.toLowerCase();
+		            appliquerFiltres();
+		        });
+		    }
+    
+		    if (filterType) {
+		        filterType.addEventListener('change', (e) => {
+		            filtresActifs.type = e.target.value;
+		            appliquerFiltres();
+		        });
+		    }
+    
+		    if (filterCategory) {
+		        // Peupler les catégories
+		        filterCategory.innerHTML = '<option value="">Toutes catégories</option>';
+		        [...CATEGORIES.revenu, ...CATEGORIES.depense].forEach(cat => {
+		            const option = document.createElement('option');
+		            option.value = cat;
+		            option.textContent = cat;
+		            filterCategory.appendChild(option);
+		        });
+        
+		        filterCategory.addEventListener('change', (e) => {
+		            filtresActifs.categorie = e.target.value;
+		            appliquerFiltres();
+		        });
+		    }
+    
+		    if (filterAccount) {
+		        // Peupler les comptes
+		        filterAccount.innerHTML = '<option value="">Tous comptes</option>';
+		        COMPTES.forEach(compte => {
+		            const option = document.createElement('option');
+		            option.value = compte;
+		            option.textContent = compte;
+		            filterAccount.appendChild(option);
+		        });
+        
+		        filterAccount.addEventListener('change', (e) => {
+		            filtresActifs.compte = e.target.value;
+		            appliquerFiltres();
+		        });
+		    }
+		}
+
+		function appliquerFiltres() {
+		    const transactionsFiltrees = currentMonthData.transactions.filter(t => {
+		        // Filtre recherche
+		        if (filtresActifs.recherche) {
+		            const searchMatch = t.description.toLowerCase().includes(filtresActifs.recherche) ||
+		                                t.categorie.toLowerCase().includes(filtresActifs.recherche) ||
+		                                t.compte.toLowerCase().includes(filtresActifs.recherche);
+		            if (!searchMatch) return false;
+		        }
+        
+		        // Filtre type
+		        if (filtresActifs.type && t.type !== filtresActifs.type) {
+		            return false;
+		        }
+        
+		        // Filtre catégorie
+		        if (filtresActifs.categorie && t.categorie !== filtresActifs.categorie) {
+		            return false;
+		        }
+        
+		        // Filtre compte
+		        if (filtresActifs.compte && t.compte !== filtresActifs.compte) {
+		            return false;
+		        }
+        
+		        return true;
+		    });
+    
+		    afficherTransactionsFiltrees(transactionsFiltrees);
+		}
+		let triActuel = {
+		    colonne: 'date',
+		    ordre: 'desc' // 'asc' ou 'desc'
+		};
+
+		function trierTransactions(colonne) {
+		    // Inverser l'ordre si on clique sur la même colonne
+		    if (triActuel.colonne === colonne) {
+		        triActuel.ordre = triActuel.ordre === 'asc' ? 'desc' : 'asc';
+		    } else {
+		        triActuel.colonne = colonne;
+		        triActuel.ordre = 'asc';
+		    }
+    
+		    // Trier le tableau
+		    currentMonthData.transactions.sort((a, b) => {
+		        let valA, valB;
+        
+		        if (colonne === 'montant') {
+		            valA = a.montant;
+		            valB = b.montant;
+		        } else if (colonne === 'date') {
+		            valA = new Date(a.date);
+		            valB = new Date(b.date);
+		        } else {
+		            valA = (a[colonne] || '').toLowerCase();
+		            valB = (b[colonne] || '').toLowerCase();
+		        }
+        
+		        if (valA < valB) return triActuel.ordre === 'asc' ? -1 : 1;
+		        if (valA > valB) return triActuel.ordre === 'asc' ? 1 : -1;
+		        return 0;
+		    });
+    
+		    // Mettre à jour les icônes
+		    document.querySelectorAll('[id^="sort-icon-"]').forEach(icon => {
+		        icon.className = 'fas fa-sort';
+		        icon.style.opacity = '0.3';
+		    });
+    
+		    const activeIcon = document.getElementById(`sort-icon-${colonne}`);
+		    if (activeIcon) {
+		        activeIcon.className = triActuel.ordre === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+		        activeIcon.style.opacity = '1';
+		    }
+    
+		    // Réafficher
+		    if (Object.values(filtresActifs).some(v => v !== '')) {
+		        appliquerFiltres();
+		    } else {
+		        rechargerTableau();
+		    }
+		}
+
+		function afficherTransactionsFiltrees(transactions) {
+		    transactionList.innerHTML = '';
+    
+		    // Supprimer l'ancien message s'il existe
+		    const oldCountInfo = document.getElementById('filter-count-info');
+		    if (oldCountInfo) {
+		        oldCountInfo.remove();
+		    }
+    
+		    transactions.forEach((t, index) => {
+		        // Trouver l'index réel dans le tableau complet
+		        const realIndex = currentMonthData.transactions.indexOf(t);
+        
+		        const row = transactionList.insertRow();
+		        row.classList.add(t.type === 'revenu' ? 'revenue-row' : 'expense-row');
+		        row.insertCell(0).textContent = t.date;
+		        row.insertCell(1).textContent = t.description;
+		        row.insertCell(2).textContent = t.type === 'revenu' ? 'Revenu' : 'Dépense';
+		        row.insertCell(3).textContent = t.categorie;
+		        row.insertCell(4).textContent = t.compte;
+		        const montantFormatte = t.type === 'revenu' ?
+		                                '+' + t.montant.toFixed(2) :
+		                                '-' + t.montant.toFixed(2);
+		        row.insertCell(5).textContent = montantFormatte;
+		        const deleteCell = row.insertCell(6);
+		        const deleteButton = document.createElement('button');
+		        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+		        deleteButton.classList.add('app-btn', 'delete-btn');
+		        deleteButton.onclick = function() { supprimerTransaction(realIndex); };
+		        deleteCell.appendChild(deleteButton);
+		    });
+    
+		    // Afficher le nombre de résultats (avec un ID unique pour pouvoir le supprimer)
+		    if (transactions.length !== currentMonthData.transactions.length) {
+		        const countInfo = document.createElement('p');
+		        countInfo.id = 'filter-count-info';
+		        countInfo.style.color = 'var(--light-text-color)';
+		        countInfo.style.marginTop = '10px';
+		        countInfo.style.fontStyle = 'italic';
+		        countInfo.innerHTML = `<i class="fas fa-filter"></i> ${transactions.length} transaction(s) affichée(s) sur ${currentMonthData.transactions.length}`;
+        
+		        // Insérer après le tableau
+		        const table = transactionList.closest('table');
+		        if (table && table.nextSibling) {
+		            table.parentNode.insertBefore(countInfo, table.nextSibling);
+		        } else if (table) {
+		            table.parentNode.appendChild(countInfo);
+		        }
+		    }
+		}
+
+		function reinitialiserFiltres() {
+		    filtresActifs = {
+		        recherche: '',
+		        type: '',
+		        categorie: '',
+		        compte: ''
+		    };
+    
+		    document.getElementById('search-input').value = '';
+		    document.getElementById('filter-type').value = '';
+		    document.getElementById('filter-category').value = '';
+		    document.getElementById('filter-account').value = '';
+    
+		    rechargerTableau();
+		}
 
         function saveCategoriesToStorage(catObj) {
             localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(catObj));
@@ -1536,6 +1845,7 @@
                 mettreAJourSoldeEtTotaux();
                 mettreAJourGraphique();
                 mettreAJourGraphiqueHistorique();
+				mettreAJourGraphiqueRevenusDepenses();
                 mettreAJourSuiviBudget();
                 genererChampsBudget();
             }
@@ -1545,6 +1855,9 @@
             if (screenId === 'dashboard-screen') {
                 rechargerTableau();
             }
+			if (screenId === 'calendar-screen') {
+			    afficherCalendrier();
+			}
         }
 
         navButtons.forEach(button => {
@@ -1560,6 +1873,8 @@
             localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
             mettreAJourGraphique();
             mettreAJourGraphiqueHistorique();
+			mettreAJourGraphiqueRevenusDepenses();
+			
         }
 
         function loadThemePreference() {
@@ -1691,31 +2006,62 @@
             return { solde, totalRevenus, totalDepenses };
         }
 
-        function mettreAJourSoldeEtTotaux() {
-            const { solde } = calculerSolde();
-            const soldeFormatted = solde.toFixed(2) + ' €';
-            soldeAnalysisDiv.textContent = soldeFormatted;
-            soldeAnalysisDiv.classList.remove('positif', 'negatif');
-            if (solde >= 0) {
-                soldeAnalysisDiv.classList.add('positif');
-            } else {
-                soldeAnalysisDiv.classList.add('negatif');
-            }
-            soldeValuePersistent.textContent = soldeFormatted;
-            soldeValuePersistent.classList.remove('positif', 'negatif');
-            if (solde >= 0) {
-                soldeValuePersistent.classList.add('positif');
-            } else {
-                soldeValuePersistent.classList.add('negatif');
-            }
-            currentTabName.textContent = currentMonthInput.value;
-            analysisTabName.textContent = currentMonthInput.value;
-            exportTabName.textContent = currentMonthInput.value;
-            currentMonthDisplay.textContent = currentMonthInput.value;
-        }
+		function mettreAJourSoldeEtTotaux() {
+		    const { solde } = calculerSolde();
+		    const soldeFormatted = solde.toFixed(2) + ' €';
+		    soldeAnalysisDiv.textContent = soldeFormatted;
+		    soldeAnalysisDiv.classList.remove('positif', 'negatif');
+		    if (solde >= 0) {
+		        soldeAnalysisDiv.classList.add('positif');
+		    } else {
+		        soldeAnalysisDiv.classList.add('negatif');
+		    }
+		    soldeValuePersistent.textContent = soldeFormatted;
+		    soldeValuePersistent.classList.remove('positif', 'negatif');
+		    if (solde >= 0) {
+		        soldeValuePersistent.classList.add('positif');
+		    } else {
+		        soldeValuePersistent.classList.add('negatif');
+		    }
+    
+		    // Message motivant selon le solde
+		    let messageMotivant = '';
+		    if (solde > 1000) {
+		        messageMotivant = '🎉 Excellent ! Vous gérez parfaitement vos finances !';
+		    } else if (solde > 500) {
+		        messageMotivant = '💪 Très bien ! Continuez comme ça !';
+		    } else if (solde > 0) {
+		        messageMotivant = '👍 Vous êtes dans le vert, bon travail !';
+		    } else if (solde > -100) {
+		        messageMotivant = '⚠️ Attention, surveillez vos dépenses ce mois-ci';
+		    } else if (solde > -500) {
+		        messageMotivant = '🚨 Budget serré, pensez à réduire certaines dépenses';
+		    } else {
+		        messageMotivant = '⛔ Situation difficile, il est temps de revoir votre budget';
+		    }
+    
+		    // Afficher le message sous le solde
+		    let messageDiv = document.getElementById('solde-message');
+		    if (!messageDiv) {
+		        messageDiv = document.createElement('p');
+		        messageDiv.id = 'solde-message';
+		        messageDiv.style.cssText = 'margin-top: 15px; font-size: 1.1em; font-weight: 500; color: var(--text-color); text-align: center;';
+		        soldeAnalysisDiv.parentNode.insertBefore(messageDiv, soldeAnalysisDiv.nextSibling);
+		    }
+		    messageDiv.textContent = messageMotivant;
+    
+		    currentTabName.textContent = currentMonthInput.value;
+		    analysisTabName.textContent = currentMonthInput.value;
+		    exportTabName.textContent = currentMonthInput.value;
+		    currentMonthDisplay.textContent = currentMonthInput.value;
+		}
 
         function rechargerTableau() {
             transactionList.innerHTML = '';
+		    const oldCountInfo = document.getElementById('filter-count-info');
+		    if (oldCountInfo) {
+		        oldCountInfo.remove();
+		    }
             currentMonthData.transactions.forEach((t, index) => {
                 const row = transactionList.insertRow();
                 row.classList.add(t.type === 'revenu' ? 'revenue-row' : 'expense-row');
@@ -1737,7 +2083,102 @@
             });
             mettreAJourSoldeEtTotaux();
             mettreAJourSuiviBudget();
-        }
+		    if (document.getElementById('calendar-screen').classList.contains('active')) {
+		        afficherCalendrier();    
+			}
+}
+		
+		function afficherCalendrier() {
+		    const container = document.getElementById('calendar-container');
+		    if (!container) return;
+    
+		    // Extraire mois et année du mois actuel
+		    const monthName = currentMonthInput.value;
+		    const parts = monthName.split(' ');
+		    const year = parseInt(parts[parts.length - 1]);
+		    const monthStr = parts.slice(0, -1).join(' ');
+    
+		    const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", 
+		                        "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+		    const monthIndex = monthNames.indexOf(monthStr.toLowerCase());
+    
+		    if (monthIndex === -1) {
+		        container.innerHTML = '<p style="color: var(--light-text-color); white-space: nowrap;">Format de mois invalide.Le nom du mois doit être au format "mois année" (ex: janvier 2026, février 2025).</p>';
+		        return;
+		    }
+    
+		    const firstDay = new Date(year, monthIndex, 1);
+		    const lastDay = new Date(year, monthIndex + 1, 0);
+		    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Lundi = 0
+    
+		    container.innerHTML = '';
+    
+		    // En-têtes des jours
+		    const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+		    dayHeaders.forEach(day => {
+		        const header = document.createElement('div');
+		        header.className = 'calendar-day-header';
+		        header.textContent = day;
+		        header.style.textAlign = 'center';
+		        header.style.fontWeight = '700';
+		        container.appendChild(header);
+		    });
+    
+		    // Jours vides avant le début du mois
+		    for (let i = 0; i < startDay; i++) {
+		        const emptyDay = document.createElement('div');
+		        emptyDay.className = 'calendar-day other-month';
+		        container.appendChild(emptyDay);
+		    }
+    
+		    // Grouper transactions par date
+		    const transactionsByDate = {};
+		    currentMonthData.transactions.forEach(t => {
+		        if (!transactionsByDate[t.date]) {
+		            transactionsByDate[t.date] = [];
+		        }
+		        transactionsByDate[t.date].push(t);
+		    });
+    
+		    // Jours du mois
+		    for (let day = 1; day <= lastDay.getDate(); day++) {
+		        const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+		        const dayDiv = document.createElement('div');
+		        dayDiv.className = 'calendar-day';
+        
+		        const dayHeader = document.createElement('div');
+		        dayHeader.className = 'calendar-day-header';
+		        dayHeader.textContent = day;
+		        dayDiv.appendChild(dayHeader);
+        
+		        const transactions = transactionsByDate[dateStr] || [];
+		        let totalDay = 0;
+        
+		        transactions.forEach(t => {
+		            const transDiv = document.createElement('div');
+		            transDiv.className = `calendar-transaction ${t.type}`;
+		            transDiv.textContent = `${t.description} (${t.montant.toFixed(2)}€)`;
+		            transDiv.title = `${t.description} - ${t.categorie} - ${t.montant.toFixed(2)}€`;
+		            dayDiv.appendChild(transDiv);
+            
+		            if (t.type === 'revenu') {
+		                totalDay += t.montant;
+		            } else {
+		                totalDay -= t.montant;
+		            }
+		        });
+        
+		        if (transactions.length > 0) {
+		            const totalDiv = document.createElement('div');
+		            totalDiv.className = 'calendar-day-total';
+		            totalDiv.textContent = `${totalDay >= 0 ? '+' : ''}${totalDay.toFixed(2)}€`;
+		            totalDiv.style.color = totalDay >= 0 ? 'var(--neon-success)' : 'var(--neon-danger)';
+		            dayDiv.appendChild(totalDiv);
+		        }
+        
+		        container.appendChild(dayDiv);
+		    }
+		}
 
         function ajouterNouvelleTransaction(date, description, montant, type, categorie, compte) {
             const nouvelleTransaction = { date, description, montant, type, categorie, compte, recurrent: false };
@@ -2057,6 +2498,114 @@
                 }
             });
         }
+		
+		let revenueExpenseChartInstance;
+
+		function mettreAJourGraphiqueRevenusDepenses() {
+		    const allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+		    const monthNames = Object.keys(allData).sort(comparerMois);
+    
+		    const monthLabels = [];
+		    const revenuesData = [];
+		    const depensesData = [];
+    
+		    monthNames.forEach(monthName => {
+		        const monthData = JSON.parse(allData[monthName]);
+		        let totalRevenu = 0;
+		        let totalDepense = 0;
+        
+		        monthData.transactions.forEach(t => {
+		            if (t.type === 'revenu') {
+		                totalRevenu += t.montant;
+		            } else {
+		                totalDepense += t.montant;
+		            }
+		        });
+        
+		        monthLabels.push(monthName);
+		        revenuesData.push(totalRevenu);
+		        depensesData.push(totalDepense);
+		    });
+    
+		    const canvas = document.getElementById('revenue-expense-chart');
+		    if (!canvas) return;
+    
+		    if (revenueExpenseChartInstance) {
+		        revenueExpenseChartInstance.destroy();
+		    }
+    
+		    const textColor = body.classList.contains('light-mode') ? '#212529' : '#E0E0FF';
+		    const ctx = canvas.getContext('2d');
+    
+		    revenueExpenseChartInstance = new Chart(ctx, {
+		        type: 'bar',
+		        data: {
+		            labels: monthLabels,
+		            datasets: [
+		                {
+		                    label: 'Revenus',
+		                    data: revenuesData,
+		                    backgroundColor: 'rgba(0, 255, 153, 0.6)',
+		                    borderColor: '#00FF99',
+		                    borderWidth: 2
+		                },
+		                {
+		                    label: 'Dépenses',
+		                    data: depensesData,
+		                    backgroundColor: 'rgba(255, 51, 102, 0.6)',
+		                    borderColor: '#FF3366',
+		                    borderWidth: 2
+		                }
+		            ]
+		        },
+		        options: {
+		            responsive: true,
+		            maintainAspectRatio: true,
+		            plugins: {
+		                legend: {
+		                    labels: {
+		                        color: textColor,
+		                        font: { family: 'Poppins', size: 12 }
+		                    }
+		                },
+		                tooltip: {
+		                    callbacks: {
+		                        label: function(context) {
+		                            return context.dataset.label + ': ' + context.formattedValue + ' €';
+		                        }
+		                    }
+		                }
+		            },
+		            scales: {
+		                y: {
+		                    beginAtZero: true,
+		                    title: {
+		                        display: true,
+		                        text: 'Montant (€)',
+		                        color: textColor,
+		                        font: { family: 'Poppins' }
+		                    },
+		                    ticks: {
+		                        color: textColor,
+		                        font: { family: 'Poppins' }
+		                    },
+		                    grid: {
+		                        color: body.classList.contains('light-mode') ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)'
+		                    }
+		                },
+		                x: {
+		                    ticks: {
+		                        color: textColor,
+		                        font: { family: 'Poppins' }
+		                    },
+		                    grid: {
+		                        display: false
+		                    }
+		                }
+		            }
+		        }
+		    });
+		}
 
         function sauvegarderTransactions(showMessage = true) {
             const currentMonthName = currentMonthInput.value.trim();
@@ -2080,34 +2629,40 @@
             }
         }
 
-        function chargerTransactions() {
-            const monthToLoad = currentMonthInput.value;
-            if (monthToLoad === 'new') {
-                gererNouveauMois();
-                return;
-            }
-            let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-            if (allData[monthToLoad]) {
-                currentMonthData = JSON.parse(allData[monthToLoad]);
-                currentMonthData.transactions = currentMonthData.transactions || [];
-                currentMonthData.soldeOuverture = parseFloat(currentMonthData.soldeOuverture) || 0;
-                currentMonthData.budgets = currentMonthData.budgets || {};
-                transactions = currentMonthData.transactions;
-                currentMonthInput.value = monthToLoad;
-                soldeOuvertureInput.value = currentMonthData.soldeOuverture.toFixed(2);
-                genererChampsBudget();
-                rechargerTableau();
-				mettreAJourTimeline();
-                if (document.getElementById('analysis-screen').classList.contains('active')) {
-                    mettreAJourGraphique();
-                    mettreAJourGraphiqueHistorique();
-                    mettreAJourSoldeEtTotaux();
-                    mettreAJourSuiviBudget();
-                }
-            } else {
-                showModal(`Erreur: Les données pour "${monthToLoad}" sont introuvables.`, 'error');
-            }
-        }
+		function chargerTransactions() {
+		    const monthToLoad = currentMonthInput.value;
+		    if (monthToLoad === 'new') {
+		        gererNouveauMois();
+		        return;
+		    }
+		    let allData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+		    if (allData[monthToLoad]) {
+		        currentMonthData = JSON.parse(allData[monthToLoad]);
+		        currentMonthData.transactions = currentMonthData.transactions || [];
+		        currentMonthData.soldeOuverture = parseFloat(currentMonthData.soldeOuverture) || 0;
+		        currentMonthData.budgets = currentMonthData.budgets || {};
+		        transactions = currentMonthData.transactions;
+		        currentMonthInput.value = monthToLoad;
+		        soldeOuvertureInput.value = currentMonthData.soldeOuverture.toFixed(2);
+		        genererChampsBudget();
+		        rechargerTableau();
+		        mettreAJourTimeline();
+        
+		        // ✅ AJOUTEZ CETTE LIGNE
+		        if (document.getElementById('calendar-screen').classList.contains('active')) {
+		            afficherCalendrier();
+		        }
+        
+		        if (document.getElementById('analysis-screen').classList.contains('active')) {
+		            mettreAJourGraphique();
+		            mettreAJourGraphiqueHistorique();
+		            mettreAJourSoldeEtTotaux();
+		            mettreAJourSuiviBudget();
+		        }
+		    } else {
+		        showModal(`Erreur: Les données pour "${monthToLoad}" sont introuvables.`, 'error');
+		    }
+		}
 
         function preparerNouvelOnglet(soldePrecedent = 0, moisPrecedentNom = null) {
             currentMonthData = {
@@ -2686,6 +3241,7 @@
             chargerRecurrences();
             setupAutoSave();
 			mettreAJourTimeline();
+			initialiserFiltres();
 
 
             const lastSave = localStorage.getItem(LAST_SAVE_KEY);
