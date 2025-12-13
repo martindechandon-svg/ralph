@@ -1792,6 +1792,62 @@
         }
 
         let CATEGORIES = loadCategoriesFromStorage();
+		
+		// --- GESTION DES ÉCRANS ---
+		const ACTIVE_SCREEN_KEY = 'ralph_active_screen';
+
+		function showScreen(screenId) {
+		    document.querySelectorAll('.screen').forEach(screen => {
+		        screen.classList.remove('active');
+		    });
+		    document.getElementById(screenId).classList.add('active');
+		    navButtons.forEach(btn => {
+		        if (btn.getAttribute('data-screen') === screenId) {
+		            btn.classList.add('active');
+		        } else {
+		            btn.classList.remove('active');
+		        }
+		    });
+    
+		    // Sauvegarder l'onglet actif
+		    localStorage.setItem(ACTIVE_SCREEN_KEY, screenId);
+    
+		    if (screenId === 'recurrence-page') {
+		        chargerRecurrences();
+		    }
+		    if (screenId === 'analysis-screen') {
+		        mettreAJourSoldeEtTotaux();
+		        mettreAJourGraphique();
+		        mettreAJourGraphiqueHistorique();
+		        mettreAJourGraphiqueRevenusDepenses();
+		        mettreAJourSuiviBudget();
+		        genererChampsBudget();
+		    }
+		    if (screenId === 'transfer-page') {
+		        exportTabName.textContent = currentMonthInput.value;
+		    }
+		    if (screenId === 'dashboard-screen') {
+		        rechargerTableau();
+		    }
+		    if (screenId === 'calendar-screen') {
+		        afficherCalendrier();
+		    }
+		}
+
+		function loadActiveScreen() {
+		    const savedScreen = localStorage.getItem(ACTIVE_SCREEN_KEY);
+		    if (savedScreen && document.getElementById(savedScreen)) {
+		        showScreen(savedScreen);
+		    } else {
+		        showScreen('dashboard-screen');
+		    }
+		}
+
+		navButtons.forEach(button => {
+		    button.addEventListener('click', function() {
+		        showScreen(this.getAttribute('data-screen'));
+		    });
+		});
 
         // --- GESTION DE LA MODALE ---
         function showModal(message, type = 'info', duration = 3000) {
@@ -1825,46 +1881,6 @@
             }, duration);
         }
 
-        // --- GESTION DES ÉCRANS ---
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-            navButtons.forEach(btn => {
-                if (btn.getAttribute('data-screen') === screenId) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            if (screenId === 'recurrence-page') {
-                chargerRecurrences();
-            }
-            if (screenId === 'analysis-screen') {
-                mettreAJourSoldeEtTotaux();
-                mettreAJourGraphique();
-                mettreAJourGraphiqueHistorique();
-				mettreAJourGraphiqueRevenusDepenses();
-                mettreAJourSuiviBudget();
-                genererChampsBudget();
-            }
-            if (screenId === 'transfer-page') {
-                exportTabName.textContent = currentMonthInput.value;
-            }
-            if (screenId === 'dashboard-screen') {
-                rechargerTableau();
-            }
-			if (screenId === 'calendar-screen') {
-			    afficherCalendrier();
-			}
-        }
-
-        navButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                showScreen(this.getAttribute('data-screen'));
-            });
-        });
 
         // --- GESTION DU THÈME ---
         function toggleTheme() {
@@ -3247,6 +3263,7 @@
             setupAutoSave();
 			mettreAJourTimeline();
 			initialiserFiltres();
+			loadActiveScreen();
 
 
             const lastSave = localStorage.getItem(LAST_SAVE_KEY);
